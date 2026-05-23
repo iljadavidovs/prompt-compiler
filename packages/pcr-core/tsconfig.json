@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../pcr-shared" },
+    { "path": "../pcr-intelligence" },
+    { "path": "../pcr-tool-grammar" },
+    { "path": "../pcr-tool-planner" },
+    { "path": "../pcr-tool-coding" },
+    { "path": "../pcr-tool-progress-assessment" },
+    { "path": "../pcr-store" },
+    { "path": "../pcr-retrieval" },
+    { "path": "../pcr-context" }
+  ]
+}

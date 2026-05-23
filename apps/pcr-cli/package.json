@@ -1,0 +1,28 @@
+{
+  "name": "@pcr/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "pcr": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@pcr/context": "workspace:*",
+    "@pcr/core": "workspace:*",
+    "@pcr/pcrd": "workspace:*",
+    "@pcr/retrieval": "workspace:*",
+    "@pcr/shared": "workspace:*",
+    "@pcr/store": "workspace:*",
+    "@pcr/tool-coding": "workspace:*",
+    "@pcr/tool-grammar": "workspace:*",
+    "@pcr/tool-planner": "workspace:*",
+    "@pcr/tool-progress-assessment": "workspace:*",
+    "commander": "^12.1.0",
+    "yaml": "^2.7.0"
+  }
+}

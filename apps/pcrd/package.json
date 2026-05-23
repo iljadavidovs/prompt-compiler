@@ -1,0 +1,28 @@
+{
+  "name": "@pcr/pcrd",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@pcr/context": "workspace:*",
+    "@pcr/core": "workspace:*",
+    "@pcr/dashboard": "workspace:*",
+    "@pcr/retrieval": "workspace:*",
+    "@pcr/shared": "workspace:*",
+    "@pcr/store": "workspace:*",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "yaml": "^2.7.0"
+  }
+}

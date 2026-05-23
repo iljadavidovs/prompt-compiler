@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PCR Settings</title>
+    <link rel="stylesheet" href="/dev/assets/dashboard.css" />
+  </head>
+  <body data-page="settings">
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>PCR Settings</h1>
+          <p>Global local configuration stored in the PCR user directory.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="refreshButton" title="Refresh dashboard" aria-label="Refresh dashboard">↻</button>
+          <a class="text-button" href="/health">Health</a>
+        </div>
+      </header>
+
+      <nav class="nav-tabs" aria-label="Dashboard pages">
+        <a href="/dashboard/history/">History</a>
+        <a href="/dashboard/tools/">Tools</a>
+        <a class="active" href="/dashboard/settings/">Settings</a>
+      </nav>
+
+      <section class="status-strip">
+        <div><span class="label">Daemon</span><strong id="daemonStatus">Checking</strong></div>
+        <div><span class="label">Runs</span><strong id="runCount">0</strong></div>
+        <div><span class="label">Tools</span><strong id="toolCount">0</strong></div>
+        <div><span class="label">Config</span><strong id="configPath">Loading</strong></div>
+      </section>
+
+      <section class="panel settings-panel standalone">
+        <div class="panel-header">
+          <h2>Global Settings</h2>
+          <button class="text-button" id="saveSettingsButton">Save Settings</button>
+        </div>
+        <textarea id="settingsJson" spellcheck="false"></textarea>
+      </section>
+    </main>
+    <script type="module" src="/dev/assets/dashboard.js"></script>
+  </body>
+</html>
+

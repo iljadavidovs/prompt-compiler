@@ -1,0 +1,6 @@
+{
+  "extends": "Layout",
+  "title": "Prompt Compiler - Compile intent into context-aware prompts",
+  "description": "Prompt Compiler is a local-first context compiler that turns rough human intent into high-quality prompts for LLM work.",
+  "render": true
+}

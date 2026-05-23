@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PCR Tools</title>
+    <link rel="stylesheet" href="@ASSETS@/dashboard.css" />
+  </head>
+  <body data-page="tools">
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>PCR Tools</h1>
+          <p>Installed tool packages and per-tool configuration.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="refreshButton" title="Refresh dashboard" aria-label="Refresh dashboard">↻</button>
+          <a class="text-button" href="/health">Health</a>
+        </div>
+      </header>
+
+      <nav class="nav-tabs" aria-label="Dashboard pages">
+        <a href="/dashboard/history/">History</a>
+        <a class="active" href="/dashboard/tools/">Tools</a>
+        <a href="/dashboard/settings/">Settings</a>
+      </nav>
+
+      <section class="status-strip">
+        <div><span class="label">Daemon</span><strong id="daemonStatus">Checking</strong></div>
+        <div><span class="label">Runs</span><strong id="runCount">0</strong></div>
+        <div><span class="label">Tools</span><strong id="toolCount">0</strong></div>
+        <div><span class="label">Config</span><strong id="configPath">Loading</strong></div>
+      </section>
+
+      <section class="tools-page">
+        <aside class="panel tools-panel">
+          <div class="panel-header">
+            <h2>Tools</h2>
+          </div>
+          <div id="toolList" class="tool-list"></div>
+        </aside>
+
+        <section class="panel config-panel">
+          <div class="panel-header">
+            <h2 id="selectedToolName">Tool Configuration</h2>
+            <label class="toggle">
+              <input type="checkbox" id="toolEnabled" />
+              <span>Enabled</span>
+            </label>
+          </div>
+          <div class="form-grid">
+            <label>
+              Keywords
+              <input id="toolKeywords" type="text" placeholder="grammar fix, planning" />
+            </label>
+            <label>
+              Configuration JSON
+              <textarea id="toolConfig" spellcheck="false"></textarea>
+            </label>
+          </div>
+          <div class="panel-footer">
+            <p class="hint" id="toolHint">Select a tool to inspect its settings.</p>
+            <button class="text-button" id="saveToolButton">Save Tool</button>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="@ASSETS@/dashboard.js"></script>
+  </body>
+</html>

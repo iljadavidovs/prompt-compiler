@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PCR History</title>
+    <link rel="stylesheet" href="/dev/assets/dashboard.css" />
+  </head>
+  <body data-page="history">
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>PCR History</h1>
+          <p>Historical compilations, generated prompts, metadata, and context packs.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="refreshButton" title="Refresh dashboard" aria-label="Refresh dashboard">↻</button>
+          <a class="text-button" href="/health">Health</a>
+        </div>
+      </header>
+
+      <nav class="nav-tabs" aria-label="Dashboard pages">
+        <a class="active" href="/dashboard/history/">History</a>
+        <a href="/dashboard/tools/">Tools</a>
+        <a href="/dashboard/settings/">Settings</a>
+      </nav>
+
+      <section class="status-strip">
+        <div><span class="label">Daemon</span><strong id="daemonStatus">Checking</strong></div>
+        <div><span class="label">Runs</span><strong id="runCount">0</strong></div>
+        <div><span class="label">Tools</span><strong id="toolCount">0</strong></div>
+        <div><span class="label">Config</span><strong id="configPath">Loading</strong></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Historical Runs</h2>
+          <select id="historyLimit" title="History limit">
+            <option value="20">20</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Created</th>
+                <th>Mode</th>
+                <th>Tool</th>
+                <th>Input</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="runDialog" class="run-dialog">
+      <div class="dialog-header">
+        <div>
+          <h2 id="runDialogTitle">Run Details</h2>
+          <p id="runDialogSubtitle" class="muted"></p>
+        </div>
+        <button class="icon-button" id="closeRunDialog" title="Close" aria-label="Close">×</button>
+      </div>
+      <div class="detail-grid">
+        <section>
+          <h3>Generated Prompt</h3>
+          <pre id="detailPrompt"></pre>
+        </section>
+        <section>
+          <h3>Raw Input</h3>
+          <pre id="detailRaw"></pre>
+          <h3>Metadata</h3>
+          <pre id="detailMetadata"></pre>
+        </section>
+        <section>
+          <h3>Context Pack</h3>
+          <pre id="detailContext"></pre>
+        </section>
+        <section>
+          <h3>Prompt IR</h3>
+          <pre id="detailIr"></pre>
+        </section>
+      </div>
+    </dialog>
+    <script type="module" src="/dev/assets/dashboard.js"></script>
+  </body>
+</html>
+

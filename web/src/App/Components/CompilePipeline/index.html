@@ -1,0 +1,44 @@
+<section id="architecture" class="section section-ink" aria-labelledby="architecture-title">
+    <div class="section-heading">
+        <p class="kicker">Architecture</p>
+        <h2 id="architecture-title">A pre-runtime layer for AI work.</h2>
+        <p class="section-copy">LLMs answer. Prompt Compiler prepares the question properly.</p>
+    </div>
+    <ol class="pipeline" aria-label="Prompt Compiler architecture pipeline">
+        <li>
+            <span class="pipe-node">01</span>
+            <strong>Rough intent</strong>
+            <p>The human writes the shortest honest request they can.</p>
+        </li>
+        <li>
+            <span class="pipe-node">02</span>
+            <strong>Profile/settings</strong>
+            <p>Saved tone, defaults, constraints, provider choice, and operating preferences are applied.</p>
+        </li>
+        <li>
+            <span class="pipe-node">03</span>
+            <strong>Context retrieval</strong>
+            <p>Relevant project notes, current goals, schedule, and local files are selected.</p>
+        </li>
+        <li>
+            <span class="pipe-node">04</span>
+            <strong>History matching</strong>
+            <p>Similar prior prompts, positive examples, and negative examples calibrate the output.</p>
+        </li>
+        <li>
+            <span class="pipe-node">05</span>
+            <strong>Context pack</strong>
+            <p>The selected memory is compressed into a bounded, inspectable package.</p>
+        </li>
+        <li>
+            <span class="pipe-node">06</span>
+            <strong>PromptIR</strong>
+            <p>The request becomes structured instruction: task, context, requirements, risks, and output contract.</p>
+        </li>
+        <li>
+            <span class="pipe-node">07</span>
+            <strong>Final compiled prompt</strong>
+            <p>The final prompt is ready for a model, CLI, MCP tool, or local workflow.</p>
+        </li>
+    </ol>
+</section>

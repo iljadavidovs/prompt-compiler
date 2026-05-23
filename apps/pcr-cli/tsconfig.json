@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../../packages/pcr-shared" },
+    { "path": "../../packages/pcr-store" },
+    { "path": "../../packages/pcr-retrieval" },
+    { "path": "../../packages/pcr-context" },
+    { "path": "../../packages/pcr-core" },
+    { "path": "../../packages/pcr-tool-progress-assessment" },
+    { "path": "../pcrd" }
+  ]
+}

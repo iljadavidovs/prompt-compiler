@@ -1,0 +1,19 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/pcr-shared" },
+    { "path": "./packages/pcr-store" },
+    { "path": "./packages/pcr-retrieval" },
+    { "path": "./packages/pcr-intelligence" },
+    { "path": "./packages/pcr-tool-grammar" },
+    { "path": "./packages/pcr-tool-planner" },
+    { "path": "./packages/pcr-tool-coding" },
+    { "path": "./packages/pcr-tool-progress-assessment" },
+    { "path": "./packages/dashboard" },
+    { "path": "./packages/pcr-context" },
+    { "path": "./packages/pcr-core" },
+    { "path": "./apps/pcrd" },
+    { "path": "./apps/pcr-mcp" },
+    { "path": "./apps/pcr-cli" }
+  ]
+}

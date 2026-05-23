@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@pcr/shared": ["packages/pcr-shared/src/index.ts"],
+      "@pcr/store": ["packages/pcr-store/src/index.ts"],
+      "@pcr/context": ["packages/pcr-context/src/index.ts"],
+      "@pcr/retrieval": ["packages/pcr-retrieval/src/index.ts"],
+      "@pcr/intelligence": ["packages/pcr-intelligence/src/index.ts"],
+      "@pcr/tool-grammar": ["packages/pcr-tool-grammar/src/index.ts"],
+      "@pcr/tool-planner": ["packages/pcr-tool-planner/src/index.ts"],
+      "@pcr/tool-coding": ["packages/pcr-tool-coding/src/index.ts"],
+      "@pcr/tool-progress-assessment": ["packages/pcr-tool-progress-assessment/src/index.ts"],
+      "@pcr/dashboard": ["packages/dashboard/src/index.ts"],
+      "@pcr/core": ["packages/pcr-core/src/index.ts"],
+      "@pcr/pcrd": ["apps/pcrd/src/index.ts"],
+      "@pcr/mcp": ["apps/pcr-mcp/src/index.ts"]
+    }
+  }
+}

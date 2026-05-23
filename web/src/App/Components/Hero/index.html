@@ -1,0 +1,42 @@
+<section class="hero" aria-labelledby="hero-title">
+    <div class="hero-grid">
+        <div class="hero-copy">
+            <p class="kicker">Local-first prompt infrastructure</p>
+            <h1 id="hero-title">Prompt Compiler</h1>
+            <p class="tagline">Compile intent into context-aware prompts.</p>
+            <p class="hero-lede">
+                Prompt Compiler prepares the question before the model answers. It turns rough intent, saved preferences, current goals, schedule, project memory, history, examples, templates, and output rules into a prompt that is ready to execute.
+            </p>
+            <div class="hero-actions" aria-label="Primary actions">
+                <a class="button button-primary" href="#v0-spec">Read the V0 spec</a>
+                <a class="button button-secondary" href="#architecture">View architecture</a>
+            </div>
+            <div id="v0-spec" class="spec-note" aria-label="V0 spec summary">
+                <span class="spec-label">V0</span>
+                <p>One local compiler command, one context pack, one explicit PromptIR, one final prompt that can be inspected before it is sent to any provider.</p>
+            </div>
+        </div>
+        <aside class="terminal-demo" aria-label="Prompt Compiler terminal demo">
+            <div class="terminal-top">
+                <span></span>
+                <span></span>
+                <span></span>
+                <strong>compile.session</strong>
+            </div>
+            <pre><code>$pcr according to my current goals and nearest schedule, compile a research prompt for assessment of my progress</code></pre>
+            <div class="compile-output">
+                <p class="output-label">Output preview</p>
+                <pre><code>Research prompt:
+Assess my progress against current goals, near schedule, execution quality, and bottlenecks.
+Use my saved preferences.
+Avoid generic motivation.
+Return a structured report with:
+- progress score
+- bottlenecks
+- risks
+- next actions
+- hard questions</code></pre>
+            </div>
+        </aside>
+    </div>
+</section>

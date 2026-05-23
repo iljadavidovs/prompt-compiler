@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "enabled": true,
+    "strict": true,
+    "sources": [
+      "Rules/siteRules.js"
+    ]
+  },
+  "postProcess": {
+    "enabled": true,
+    "sources": [
+      "PostProcess/cleanHtml.js"
+    ]
+  }
+}
