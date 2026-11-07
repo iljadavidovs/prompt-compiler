@@ -1,0 +1,54 @@
+$ docker --context colima-pcr45 exec pcr45-baseline pnpm build
+
+> prompt-compiler@0.0.0 build /work
+> pnpm -r --sort build
+
+Scope: 14 of 15 workspace projects
+packages/dashboard build$ tsc -p tsconfig.json && essencekit build dev
+packages/pcr-shared build$ tsc -p tsconfig.json
+packages/dashboard build: [INFO] Starting render process for environment: dev
+packages/dashboard build: [INFO] Component added: Components → index.html
+packages/dashboard build: [INFO] Component added: history → history/index.html
+packages/dashboard build: [INFO] Component added: settings → settings/index.html
+packages/dashboard build: [INFO] Component added: tools → tools/index.html
+packages/dashboard build: [INFO] Component added: BaseComponent → BaseComponent/index.html
+packages/dashboard build: [INFO] Component added: BasePage → BasePage/index.html
+packages/dashboard build: [INFO] Found 6 components to render.
+packages/dashboard build: [INFO] Rendered: Components → index.html
+packages/dashboard build: [INFO] Rendered: history → history/index.html
+packages/dashboard build: [INFO] Rendered: settings → settings/index.html
+packages/dashboard build: [INFO] Rendered: tools → tools/index.html
+packages/dashboard build: [INFO] Skipping BaseComponent (render: false or not set)
+packages/dashboard build: [INFO] Skipping BasePage (render: false or not set)
+packages/dashboard build: [SUCCESS] Core scripts copied selectively to /Pub/dev/assets
+packages/dashboard build: [SUCCESS] App assets copied recursively to /Pub/dev/assets
+packages/dashboard build: [SUCCESS] Build complete. Output saved to: /Pub/dev
+packages/dashboard build: ✅ essencekit build completed successfully (dev)!
+packages/dashboard build: Done
+packages/pcr-shared build: Done
+packages/pcr-intelligence build$ tsc -p tsconfig.json
+packages/pcr-tool-coding build$ tsc -p tsconfig.json
+packages/pcr-store build$ tsc -p tsconfig.json
+packages/pcr-tool-grammar build$ tsc -p tsconfig.json
+packages/pcr-tool-coding build: Done
+packages/pcr-tool-planner build$ tsc -p tsconfig.json
+packages/pcr-tool-grammar build: Done
+packages/pcr-tool-progress-assessment build$ tsc -p tsconfig.json
+packages/pcr-store build: Done
+packages/pcr-intelligence build: Done
+packages/pcr-tool-progress-assessment build: Done
+packages/pcr-tool-planner build: Done
+packages/pcr-retrieval build$ tsc -p tsconfig.json
+packages/pcr-retrieval build: Done
+packages/pcr-context build$ tsc -p tsconfig.json
+packages/pcr-context build: Done
+packages/pcr-core build$ tsc -p tsconfig.json
+packages/pcr-core build: Done
+apps/pcr-mcp build$ tsc -p tsconfig.json
+apps/pcrd build$ tsc -p tsconfig.json
+apps/pcrd build: Done
+apps/pcr-mcp build: Done
+apps/pcr-cli build$ tsc -p tsconfig.json
+apps/pcr-cli build: Done
+
+EXIT_STATUS=0

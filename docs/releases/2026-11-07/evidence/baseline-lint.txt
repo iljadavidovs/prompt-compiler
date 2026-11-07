@@ -1,0 +1,7 @@
+$ docker --context colima-pcr45 exec pcr45-baseline pnpm lint
+
+> prompt-compiler@0.0.0 lint /work
+> eslint "packages/**/*.ts" "apps/**/*.ts" "*.config.*"
+
+
+EXIT_STATUS=0

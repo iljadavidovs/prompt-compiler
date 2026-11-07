@@ -1,0 +1,95 @@
+$ docker --context colima-pcr45 run --rm --env npm_config_build_from_source=true pcr45-candidate sh -c 'pnpm -r rebuild better-sqlite3 && node scripts/smoke.mjs'
+Scope: all 15 workspace projects
+.../node_modules/better-sqlite3 install$ prebuild-install || node-gyp rebuild --release
+.../node_modules/better-sqlite3 install: gyp info it worked if it ends with ok
+.../node_modules/better-sqlite3 install: gyp info using node-gyp@10.3.1
+.../node_modules/better-sqlite3 install: gyp info using node@22.23.4 | linux | arm64
+.../node_modules/better-sqlite3 install: gyp info find Python using Python version 3.11.2 found at "/usr/bin/python3"
+.../node_modules/better-sqlite3 install: gyp http GET https://nodejs.org/download/release/v22.23.4/node-v22.23.4-headers.tar.gz
+.../node_modules/better-sqlite3 install: gyp http 200 https://nodejs.org/download/release/v22.23.4/node-v22.23.4-headers.tar.gz
+.../node_modules/better-sqlite3 install: gyp http GET https://nodejs.org/download/release/v22.23.4/SHASUMS256.txt
+.../node_modules/better-sqlite3 install: gyp http 200 https://nodejs.org/download/release/v22.23.4/SHASUMS256.txt
+.../node_modules/better-sqlite3 install: gyp info spawn /usr/bin/python3
+.../node_modules/better-sqlite3 install: gyp info spawn args [
+.../node_modules/better-sqlite3 install: gyp info spawn args '/root/.cache/node/corepack/v1/pnpm/9.15.4/dist/node_modules/node-gyp/gyp/gyp_main.py',
+.../node_modules/better-sqlite3 install: gyp info spawn args 'binding.gyp',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-f',
+.../node_modules/better-sqlite3 install: gyp info spawn args 'make',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-I',
+.../node_modules/better-sqlite3 install: gyp info spawn args '/work/node_modules/.pnpm/better-sqlite3@11.10.0/node_modules/better-sqlite3/build/config.gypi',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-I',
+.../node_modules/better-sqlite3 install: gyp info spawn args '/root/.cache/node/corepack/v1/pnpm/9.15.4/dist/node_modules/node-gyp/addon.gypi',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-I',
+.../node_modules/better-sqlite3 install: gyp info spawn args '/root/.cache/node-gyp/22.23.4/include/node/common.gypi',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dlibrary=shared_library',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dvisibility=default',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dnode_root_dir=/root/.cache/node-gyp/22.23.4',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dnode_gyp_dir=/root/.cache/node/corepack/v1/pnpm/9.15.4/dist/node_modules/node-gyp',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dnode_lib_file=/root/.cache/node-gyp/22.23.4/<(target_arch)/node.lib',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dmodule_root_dir=/work/node_modules/.pnpm/better-sqlite3@11.10.0/node_modules/better-sqlite3',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Dnode_engine=v8',
+.../node_modules/better-sqlite3 install: gyp info spawn args '--depth=.',
+.../node_modules/better-sqlite3 install: gyp info spawn args '--no-parallel',
+.../node_modules/better-sqlite3 install: gyp info spawn args '--generator-output',
+.../node_modules/better-sqlite3 install: gyp info spawn args 'build',
+.../node_modules/better-sqlite3 install: gyp info spawn args '-Goutput_dir=.'
+.../node_modules/better-sqlite3 install: gyp info spawn args ]
+.../node_modules/better-sqlite3 install: gyp info spawn make
+.../node_modules/better-sqlite3 install: gyp info spawn args [ 'BUILDTYPE=Release', '-C', 'build' ]
+.../node_modules/better-sqlite3 install: make: Entering directory '/work/node_modules/.pnpm/better-sqlite3@11.10.0/node_modules/better-sqlite3/build'
+.../node_modules/better-sqlite3 install:   TOUCH ba23eeee118cd63e16015df367567cb043fed872.intermediate
+.../node_modules/better-sqlite3 install:   ACTION deps_sqlite3_gyp_locate_sqlite3_target_copy_builtin_sqlite3 ba23eeee118cd63e16015df367567cb043fed872.intermediate
+.../node_modules/better-sqlite3 install:   TOUCH Release/obj.target/deps/locate_sqlite3.stamp
+.../node_modules/better-sqlite3 install:   CC(target) Release/obj.target/sqlite3/gen/sqlite3/sqlite3.o
+.../node_modules/better-sqlite3 install: rm -f Release/obj.target/deps/sqlite3.a Release/obj.target/deps/sqlite3.a.ar-file-list; mkdir -p `dirname Release/obj.target/deps/sqlite3.a`
+.../node_modules/better-sqlite3 install: ar crs Release/obj.target/deps/sqlite3.a @Release/obj.target/deps/sqlite3.a.ar-file-list
+.../node_modules/better-sqlite3 install:   COPY Release/sqlite3.a
+.../node_modules/better-sqlite3 install:   CXX(target) Release/obj.target/better_sqlite3/src/better_sqlite3.o
+.../node_modules/better-sqlite3 install: In file included from ./src/better_sqlite3.lzz:11,
+.../node_modules/better-sqlite3 install:                  from ../src/better_sqlite3.cpp:4:
+.../node_modules/better-sqlite3 install: /root/.cache/node-gyp/22.23.4/include/node/node.h:1263:7: warning: cast between incompatible function types from 'void (*)(v8::Local<v8::Object>, v8::Local<v8::Value>, v8::Local<v8::Context>)' to 'node::addon_context_register_func' {aka 'void (*)(v8::Local<v8::Object>, v8::Local<v8::Value>, v8::Local<v8::Context>, void*)'} [-Wcast-function-type]
+.../node_modules/better-sqlite3 install:  1263 |       (node::addon_context_register_func) (regfunc),                  \
+.../node_modules/better-sqlite3 install:       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.../node_modules/better-sqlite3 install: /root/.cache/node-gyp/22.23.4/include/node/node.h:1281:3: note: in expansion of macro 'NODE_MODULE_CONTEXT_AWARE_X'
+.../node_modules/better-sqlite3 install:  1281 |   NODE_MODULE_CONTEXT_AWARE_X(modname, regfunc, NULL, 0)
+.../node_modules/better-sqlite3 install:       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+.../node_modules/better-sqlite3 install: /root/.cache/node-gyp/22.23.4/include/node/node.h:1312:3: note: in expansion of macro 'NODE_MODULE_CONTEXT_AWARE'
+.../node_modules/better-sqlite3 install:  1312 |   NODE_MODULE_CONTEXT_AWARE(NODE_GYP_MODULE_NAME,                     \
+.../node_modules/better-sqlite3 install:       |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+.../node_modules/better-sqlite3 install: ./src/better_sqlite3.lzz:67:1: note: in expansion of macro 'NODE_MODULE_INIT'
+.../node_modules/better-sqlite3 install: ./src/objects/database.lzz: In static member function 'static void Database::JS_new(const v8::FunctionCallbackInfo<v8::Value>&)':
+.../node_modules/better-sqlite3 install: ./src/objects/database.lzz:180:21: warning: variable 'status' set but not used [-Wunused-but-set-variable]
+.../node_modules/better-sqlite3 install: ./src/util/custom-table.lzz: At global scope:
+.../node_modules/better-sqlite3 install: ./src/util/custom-table.lzz:45:9: warning: missing initializer for member 'sqlite3_module::xIntegrity' [-Wmissing-field-initializers]
+.../node_modules/better-sqlite3 install: ./src/util/custom-table.lzz:72:9: warning: missing initializer for member 'sqlite3_module::xIntegrity' [-Wmissing-field-initializers]
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz: In function 'v8::Local<v8::Value> Data::GetValueJS(v8::Isolate*, sqlite3_stmt*, int, bool)':
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz:73:92: warning: this statement may fall through [-Wimplicit-fallthrough=]
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz:73:197: note: here
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz: In function 'v8::Local<v8::Value> Data::GetValueJS(v8::Isolate*, sqlite3_value*, bool)':
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz:77:81: warning: this statement may fall through [-Wimplicit-fallthrough=]
+.../node_modules/better-sqlite3 install: ./src/util/data.lzz:77:175: note: here
+.../node_modules/better-sqlite3 install:   SOLINK_MODULE(target) Release/obj.target/better_sqlite3.node
+.../node_modules/better-sqlite3 install:   COPY Release/better_sqlite3.node
+.../node_modules/better-sqlite3 install:   CC(target) Release/obj.target/test_extension/deps/test_extension.o
+.../node_modules/better-sqlite3 install:   SOLINK_MODULE(target) Release/obj.target/test_extension.node
+.../node_modules/better-sqlite3 install:   COPY Release/test_extension.node
+.../node_modules/better-sqlite3 install: rm ba23eeee118cd63e16015df367567cb043fed872.intermediate
+.../node_modules/better-sqlite3 install: make: Leaving directory '/work/node_modules/.pnpm/better-sqlite3@11.10.0/node_modules/better-sqlite3/build'
+.../node_modules/better-sqlite3 install: gyp info ok
+.../node_modules/better-sqlite3 install: Done
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","index"],"exitStatus":0,"stdoutBytes":31,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","search","goals schedule progress","--json"],"exitStatus":0,"stdoutBytes":1739,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json","--trace"],"exitStatus":0,"stdoutBytes":12858,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json"],"exitStatus":0,"stdoutBytes":10323,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","--stdin","--json"],"exitStatus":0,"stdoutBytes":1495,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","feedback","pcr_be0acbd4-db82-47df-bcb8-40f5b73005ac","--rating","like","--comment","Useful structure","--json"],"exitStatus":0,"stdoutBytes":209,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","history","--json"],"exitStatus":0,"stdoutBytes":24161,"stderr":""}
+{"check":"CLI init/index/FTS/compile/JSON/trace/determinism/skip/history/feedback","status":"PASS","indexed":"Indexed 6 file(s), 6 chunk(s).","searchResults":3,"traceSteps":["validateInput","resolveCwd","resolveTools","loadClassifierHistory","classifyIntent","selectTool","resolveProfile","resolveTemplate","prepareToolContext","buildContextPack","buildPromptIr","renderPrompt","persistCompilation"]}
+{"check":"native SQLite/migration/integrity/foreign keys/FTS5/feedback","status":"PASS","ftsMatches":2}
+{"check":"HTTP health/API flow/dashboard pages and assets","status":"PASS","responses":[{"route":"/health","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/context/index","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/context/search?q=goals","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/compile","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history/pcr_52a715a5-eaf1-4c9b-9ea4-a3fff557b38f","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history/pcr_52a715a5-eaf1-4c9b-9ea4-a3fff557b38f/feedback","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/templates","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/profiles","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/tools","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/settings","status":200,"type":"application/json; charset=utf-8"},{"route":"/dashboard/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/history/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/tools/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/settings/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/assets/dashboard.js","status":200,"type":"text/javascript; charset=utf-8"},{"route":"/dashboard/assets/dashboard.css","status":200,"type":"text/css; charset=utf-8"}]}
+{"check":"MCP stdio initialize/list/all six tools/clean exit","status":"PASS","command":["/usr/local/bin/node","/work/apps/pcr-mcp/dist/bin.js"],"tools":["pcr_add_feedback","pcr_compile","pcr_context_search","pcr_get_history","pcr_list_profiles","pcr_list_templates"],"exitStatus":0,"stderrBytes":0}
+{"status":"PASS","platform":"linux","architecture":"arm64","node":"v22.23.4","credentialsInherited":false,"codexRequired":false,"providerCallsRequired":false,"remindersEnabled":false}
+
+EXIT_STATUS=0

@@ -1,0 +1,322 @@
+$ ./scripts/verify-linux.sh HEAD
+Verifying source revision a4c7175570829ce90c3964529e3e89e2a71e0e8b
+Source archive bytes:   839680
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  837.6kB
+
+Step 1/10 : FROM node:22.23.4-bookworm@sha256:7702d8aa4d5910871692af4480eb3ba86f23047a6417a44d857d06c95d060d3f
+ ---> 7702d8aa4d59
+Step 2/10 : RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+ ---> Running in 18867826c283
+Preparing pnpm@9.15.4 for immediate activation...
+ ---> Removed intermediate container 18867826c283
+ ---> 5c81e21a7a33
+Step 3/10 : WORKDIR /work
+ ---> Running in 7553ee06e27c
+ ---> Removed intermediate container 7553ee06e27c
+ ---> 350e0cda7ee8
+Step 4/10 : ENV PCR_SKIP_ENV_FILE=1 PCR_INTELLIGENCE_ENABLED=0 PCR_INTELLIGENCE_PROVIDER=none
+ ---> Running in 14dddf193ff3
+ ---> Removed intermediate container 14dddf193ff3
+ ---> 40405e29e180
+Step 5/10 : COPY . .
+ ---> 384ae39493ea
+Step 6/10 : RUN pnpm install --frozen-lockfile
+ ---> Running in 17d47e86b1f7
+Scope: all 15 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +292
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   ╭───────────────────────────────────────────────────────────────────╮
+   │                                                                   │
+   │                Update available! 9.15.4 → 12.18.0.                │
+   │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v12.18.0   │
+   │         Run "corepack install -g pnpm@12.18.0" to update.         │
+   │                                                                   │
+   ╰───────────────────────────────────────────────────────────────────╯
+
+Progress: resolved 292, reused 0, downloaded 163, added 163
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: /root/.local/share/pnpm/store/v3
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 292, reused 0, downloaded 291, added 291
+Progress: resolved 292, reused 0, downloaded 292, added 292, done
+.../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+.../node_modules/better-sqlite3 install$ prebuild-install || node-gyp rebuild --release
+.../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+.../node_modules/better-sqlite3 install: Done
+
+devDependencies:
++ @eslint/js 9.39.4
++ @types/better-sqlite3 7.6.13
++ @types/cors 2.8.19
++ @types/express 5.0.6
++ @types/node 22.19.19
++ eslint 9.39.4
++ typescript 5.9.3
++ typescript-eslint 8.59.4
++ vitest 2.1.9
+
+Done in 3.5s
+ ---> Removed intermediate container 17d47e86b1f7
+ ---> ee6d7775d782
+Step 7/10 : RUN pnpm build && pnpm typecheck && pnpm lint && pnpm test
+ ---> Running in fbb7a2651daa
+
+> prompt-compiler@0.1.0 build /work
+> pnpm -r --sort build
+
+Scope: 14 of 15 workspace projects
+packages/dashboard build$ tsc -p tsconfig.json && essencekit build dev
+packages/pcr-shared build$ tsc -p tsconfig.json
+packages/dashboard build: [INFO] Starting render process for environment: dev
+packages/dashboard build: [INFO] Component added: Components → index.html
+packages/dashboard build: [INFO] Component added: history → history/index.html
+packages/dashboard build: [INFO] Component added: settings → settings/index.html
+packages/dashboard build: [INFO] Component added: tools → tools/index.html
+packages/dashboard build: [INFO] Component added: BaseComponent → BaseComponent/index.html
+packages/dashboard build: [INFO] Component added: BasePage → BasePage/index.html
+packages/dashboard build: [INFO] Found 6 components to render.
+packages/dashboard build: [INFO] Rendered: Components → index.html
+packages/dashboard build: [INFO] Rendered: history → history/index.html
+packages/dashboard build: [INFO] Rendered: settings → settings/index.html
+packages/dashboard build: [INFO] Rendered: tools → tools/index.html
+packages/dashboard build: [INFO] Skipping BaseComponent (render: false or not set)
+packages/dashboard build: [INFO] Skipping BasePage (render: false or not set)
+packages/dashboard build: [SUCCESS] Core scripts copied selectively to /Pub/dev/assets
+packages/dashboard build: [SUCCESS] App assets copied recursively to /Pub/dev/assets
+packages/dashboard build: [SUCCESS] Build complete. Output saved to: /Pub/dev
+packages/dashboard build: ✅ essencekit build completed successfully (dev)!
+packages/dashboard build: Done
+packages/pcr-shared build: Done
+packages/pcr-intelligence build$ tsc -p tsconfig.json
+packages/pcr-store build$ tsc -p tsconfig.json
+packages/pcr-tool-coding build$ tsc -p tsconfig.json
+packages/pcr-tool-grammar build$ tsc -p tsconfig.json
+packages/pcr-tool-grammar build: Done
+packages/pcr-tool-planner build$ tsc -p tsconfig.json
+packages/pcr-tool-coding build: Done
+packages/pcr-tool-progress-assessment build$ tsc -p tsconfig.json
+packages/pcr-store build: Done
+packages/pcr-intelligence build: Done
+packages/pcr-tool-progress-assessment build: Done
+packages/pcr-tool-planner build: Done
+packages/pcr-retrieval build$ tsc -p tsconfig.json
+packages/pcr-retrieval build: Done
+packages/pcr-context build$ tsc -p tsconfig.json
+packages/pcr-context build: Done
+packages/pcr-core build$ tsc -p tsconfig.json
+packages/pcr-core build: Done
+apps/pcr-mcp build$ tsc -p tsconfig.json
+apps/pcrd build$ tsc -p tsconfig.json
+apps/pcrd build: Done
+apps/pcr-mcp build: Done
+apps/pcr-cli build$ tsc -p tsconfig.json
+apps/pcr-cli build: Done
+
+> prompt-compiler@0.1.0 typecheck /work
+> pnpm -r --sort typecheck
+
+Scope: 14 of 15 workspace projects
+packages/dashboard typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-shared typecheck$ tsc -p tsconfig.json --noEmit
+packages/dashboard typecheck: Done
+packages/pcr-shared typecheck: Done
+packages/pcr-store typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-intelligence typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-coding typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-grammar typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-coding typecheck: Done
+packages/pcr-tool-planner typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-grammar typecheck: Done
+packages/pcr-tool-progress-assessment typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-store typecheck: Done
+packages/pcr-intelligence typecheck: Done
+packages/pcr-tool-planner typecheck: Done
+packages/pcr-tool-progress-assessment typecheck: Done
+packages/pcr-retrieval typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-retrieval typecheck: Done
+packages/pcr-context typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-context typecheck: Done
+packages/pcr-core typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-core typecheck: Done
+apps/pcr-mcp typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcrd typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcrd typecheck: Done
+apps/pcr-mcp typecheck: Done
+apps/pcr-cli typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcr-cli typecheck: Done
+
+> prompt-compiler@0.1.0 lint /work
+> eslint "packages/**/*.ts" "apps/**/*.ts" "*.config.*"
+
+
+> prompt-compiler@0.1.0 test /work
+> vitest run
+
+
+ RUN  v2.1.9 /work
+
+ ✓ packages/pcr-intelligence/src/classifier.test.ts (8 tests) 11ms
+ ✓ packages/pcr-retrieval/src/retrieval.test.ts (2 tests) 5ms
+ ✓ apps/pcr-cli/src/codex.test.ts (6 tests) 30ms
+ ✓ packages/pcr-store/src/store.test.ts (3 tests) 7ms
+ ✓ apps/pcr-cli/src/gateway.test.ts (2 tests) 33ms
+ ✓ packages/pcr-core/src/compiler.test.ts (17 tests) 280ms
+ ✓ packages/pcr-context/src/context.test.ts (2 tests) 57ms
+ ✓ apps/pcrd/src/server.test.ts (1 test) 72ms
+ ✓ apps/pcr-cli/src/cli.test.ts (1 test) 76ms
+ ✓ packages/pcr-shared/src/index.test.ts (3 tests) 2ms
+ ✓ apps/pcr-mcp/src/tools.test.ts (1 test) 16ms
+
+ Test Files  11 passed (11)
+      Tests  46 passed (46)
+   Start at  21:31:42
+   Duration  880ms (transform 287ms, setup 0ms, collect 895ms, tests 590ms, environment 1ms, prepare 312ms)
+
+ ---> Removed intermediate container fbb7a2651daa
+ ---> 6dfb45b69d5c
+Step 8/10 : RUN pnpm --filter @pcr/dashboard build:prod
+ ---> Running in f1e018368184
+
+> @pcr/dashboard@0.1.0 build:prod /work/packages/dashboard
+> tsc -p tsconfig.json && essencekit build prod
+
+[INFO] Starting render process for environment: prod
+[INFO] Component added: Components → index.html
+[INFO] Component added: history → history/index.html
+[INFO] Component added: settings → settings/index.html
+[INFO] Component added: tools → tools/index.html
+[INFO] Component added: BaseComponent → BaseComponent/index.html
+[INFO] Component added: BasePage → BasePage/index.html
+[INFO] Found 6 components to render.
+[INFO] Rendered: Components → index.html
+[INFO] Rendered: history → history/index.html
+[INFO] Rendered: settings → settings/index.html
+[INFO] Rendered: tools → tools/index.html
+[INFO] Skipping BaseComponent (render: false or not set)
+[INFO] Skipping BasePage (render: false or not set)
+[SUCCESS] Core scripts copied selectively to /Pub/prod/assets
+[SUCCESS] App assets copied recursively to /Pub/prod/assets
+[SUCCESS] Build complete. Output saved to: /Pub/prod
+✅ essencekit build completed successfully (prod)!
+ ---> Removed intermediate container f1e018368184
+ ---> 1b2df19e8fc1
+Step 9/10 : RUN cd web && npm ci --no-audit --no-fund && npm run build && npm run build:prod
+ ---> Running in a427e9ca5cd3
+
+added 10 packages in 416ms
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
+
+> prompt-compiler-web@0.1.0 build
+> essencekit build dev
+
+[INFO] Starting render process for environment: dev
+[INFO] Component added: Components → index.html
+[INFO] Component added: BasePage → BasePage/index.html
+[INFO] Component added: CompilePipeline → CompilePipeline/index.html
+[INFO] Component added: ComponentLibraryVision → ComponentLibraryVision/index.html
+[INFO] Component added: ContextStack → ContextStack/index.html
+[INFO] Component added: DeveloperWorkflow → DeveloperWorkflow/index.html
+[INFO] Component added: EssenceKitRoadmap → EssenceKitRoadmap/index.html
+[INFO] Component added: Footer → Footer/index.html
+[INFO] Component added: Hero → Hero/index.html
+[INFO] Component added: Layout → Layout/index.html
+[INFO] Component added: LocalFirst → LocalFirst/index.html
+[INFO] Component added: Problem → Problem/index.html
+[INFO] Component added: RegularUserWorkflow → RegularUserWorkflow/index.html
+[INFO] Component added: BaseComponent → BaseComponent/index.html
+[INFO] Component added: BasePage → BasePage/index.html
+[INFO] Found 15 components to render.
+[INFO] Rendered: Components → index.html
+[INFO] Skipping BasePage (render: false or not set)
+[INFO] Skipping CompilePipeline (render: false or not set)
+[INFO] Skipping ComponentLibraryVision (render: false or not set)
+[INFO] Skipping ContextStack (render: false or not set)
+[INFO] Skipping DeveloperWorkflow (render: false or not set)
+[INFO] Skipping EssenceKitRoadmap (render: false or not set)
+[INFO] Skipping Footer (render: false or not set)
+[INFO] Skipping Hero (render: false or not set)
+[INFO] Skipping Layout (render: false or not set)
+[INFO] Skipping LocalFirst (render: false or not set)
+[INFO] Skipping Problem (render: false or not set)
+[INFO] Skipping RegularUserWorkflow (render: false or not set)
+[INFO] Skipping BaseComponent (render: false or not set)
+[INFO] Skipping BasePage (render: false or not set)
+[SUCCESS] Core scripts copied selectively to /Pub/dev/assets
+[SUCCESS] App assets copied recursively to /Pub/dev/assets
+[SUCCESS] Build complete. Output saved to: /Pub/dev
+✅ essencekit build completed successfully (dev)!
+
+> prompt-compiler-web@0.1.0 build:prod
+> essencekit build prod
+
+[INFO] Starting render process for environment: prod
+[INFO] Component added: Components → index.html
+[INFO] Component added: BasePage → BasePage/index.html
+[INFO] Component added: CompilePipeline → CompilePipeline/index.html
+[INFO] Component added: ComponentLibraryVision → ComponentLibraryVision/index.html
+[INFO] Component added: ContextStack → ContextStack/index.html
+[INFO] Component added: DeveloperWorkflow → DeveloperWorkflow/index.html
+[INFO] Component added: EssenceKitRoadmap → EssenceKitRoadmap/index.html
+[INFO] Component added: Footer → Footer/index.html
+[INFO] Component added: Hero → Hero/index.html
+[INFO] Component added: Layout → Layout/index.html
+[INFO] Component added: LocalFirst → LocalFirst/index.html
+[INFO] Component added: Problem → Problem/index.html
+[INFO] Component added: RegularUserWorkflow → RegularUserWorkflow/index.html
+[INFO] Component added: BaseComponent → BaseComponent/index.html
+[INFO] Component added: BasePage → BasePage/index.html
+[INFO] Found 15 components to render.
+[INFO] Rendered: Components → index.html
+[INFO] Skipping BasePage (render: false or not set)
+[INFO] Skipping CompilePipeline (render: false or not set)
+[INFO] Skipping ComponentLibraryVision (render: false or not set)
+[INFO] Skipping ContextStack (render: false or not set)
+[INFO] Skipping DeveloperWorkflow (render: false or not set)
+[INFO] Skipping EssenceKitRoadmap (render: false or not set)
+[INFO] Skipping Footer (render: false or not set)
+[INFO] Skipping Hero (render: false or not set)
+[INFO] Skipping Layout (render: false or not set)
+[INFO] Skipping LocalFirst (render: false or not set)
+[INFO] Skipping Problem (render: false or not set)
+[INFO] Skipping RegularUserWorkflow (render: false or not set)
+[INFO] Skipping BaseComponent (render: false or not set)
+[INFO] Skipping BasePage (render: false or not set)
+[SUCCESS] Core scripts copied selectively to /Pub/prod/assets
+[SUCCESS] App assets copied recursively to /Pub/prod/assets
+[SUCCESS] Build complete. Output saved to: /Pub/prod
+✅ essencekit build completed successfully (prod)!
+ ---> Removed intermediate container a427e9ca5cd3
+ ---> eeaee88a440f
+Step 10/10 : CMD ["node", "scripts/smoke.mjs"]
+ ---> Running in cf848141804d
+ ---> Removed intermediate container cf848141804d
+ ---> 81621105c21f
+Successfully built 81621105c21f
+Successfully tagged pcr-verify:a4c717557082
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","index"],"exitStatus":0,"stdoutBytes":31,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","search","goals schedule progress","--json"],"exitStatus":0,"stdoutBytes":1739,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json","--trace"],"exitStatus":0,"stdoutBytes":12858,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json"],"exitStatus":0,"stdoutBytes":10323,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","--stdin","--json"],"exitStatus":0,"stdoutBytes":1495,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","feedback","pcr_7b5cf7c1-3b89-42fd-8106-b96d531d790c","--rating","like","--comment","Useful structure","--json"],"exitStatus":0,"stdoutBytes":209,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","history","--json"],"exitStatus":0,"stdoutBytes":24161,"stderr":""}
+{"check":"CLI init/index/FTS/compile/JSON/trace/determinism/skip/history/feedback","status":"PASS","indexed":"Indexed 6 file(s), 6 chunk(s).","searchResults":3,"traceSteps":["validateInput","resolveCwd","resolveTools","loadClassifierHistory","classifyIntent","selectTool","resolveProfile","resolveTemplate","prepareToolContext","buildContextPack","buildPromptIr","renderPrompt","persistCompilation"]}
+{"check":"native SQLite/migration/integrity/foreign keys/FTS5/feedback","status":"PASS","ftsMatches":2}
+{"check":"HTTP health/API flow/dashboard pages and assets","status":"PASS","responses":[{"route":"/health","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/context/index","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/context/search?q=goals","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/compile","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history/pcr_4245df73-55c9-432a-983a-143489f92344","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history/pcr_4245df73-55c9-432a-983a-143489f92344/feedback","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/history","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/templates","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/profiles","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/tools","status":200,"type":"application/json; charset=utf-8"},{"route":"/v1/settings","status":200,"type":"application/json; charset=utf-8"},{"route":"/dashboard/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/history/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/tools/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/settings/","status":200,"type":"text/html; charset=utf-8"},{"route":"/dashboard/assets/dashboard.js","status":200,"type":"text/javascript; charset=utf-8"},{"route":"/dashboard/assets/dashboard.css","status":200,"type":"text/css; charset=utf-8"}]}
+{"check":"MCP stdio initialize/list/all six tools/clean exit","status":"PASS","command":["/usr/local/bin/node","/work/apps/pcr-mcp/dist/bin.js"],"tools":["pcr_add_feedback","pcr_compile","pcr_context_search","pcr_get_history","pcr_list_profiles","pcr_list_templates"],"exitStatus":0,"stderrBytes":0}
+{"status":"PASS","platform":"linux","architecture":"arm64","node":"v22.23.4","credentialsInherited":false,"codexRequired":false,"providerCallsRequired":false,"remindersEnabled":false}
+
+EXIT_STATUS=0
