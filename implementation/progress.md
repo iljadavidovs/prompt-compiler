@@ -54,7 +54,7 @@ Added `packages/pcr-intelligence` with deterministic classifier fallback, struct
 
 ## Sprint 11 Follow-Up: Live OpenAI Test
 
-Copied the OpenAI API key from the local project-hunter TypeScript `.env` into this repo's ignored `.env.local` as `PCR_OPENAI_API_KEY` without printing the secret. Added automatic `.env.local` loading for PCR intelligence, test isolation via `PCR_SKIP_ENV_FILE`, intent canonicalization for LLM variants such as `progress assessment`, and context-need query expansion. Verified live OpenAI classification with `--intelligence --intelligence-provider openai`; it returned canonical `progress-assessment`, no warnings, and retrieved local goals, schedule, preferences, and history patterns.
+Configured optional OpenAI credentials through an ignored local environment file. Added automatic `.env.local` loading for PCR intelligence, test isolation via `PCR_SKIP_ENV_FILE`, intent canonicalization for LLM variants such as `progress assessment`, and context-need query expansion. Verified live OpenAI classification with `--intelligence --intelligence-provider openai`; it returned canonical `progress-assessment`, no warnings, and retrieved local goals, schedule, preferences, and history patterns.
 
 ## Sprint 12: Tool Modularity And Skip Classifier
 

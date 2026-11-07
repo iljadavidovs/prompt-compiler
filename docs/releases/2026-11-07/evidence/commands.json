@@ -1,0 +1,326 @@
+[
+  {
+    "label": "baseline-environment",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "sh",
+      "-c",
+      "cat /etc/os-release; uname -m; node --version; npm --version; command -v python3 make g++ git; test ! -d /root/.codex && test ! -d /root/.ssh && test ! -e /work/.env.local"
+    ],
+    "started": "2026-11-07T21:15:18.827447+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 0.08
+  },
+  {
+    "label": "baseline-bootstrap",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "sh",
+      "-c",
+      "corepack --version && corepack enable && corepack prepare pnpm@9.15.4 --activate && pnpm --version"
+    ],
+    "started": "2026-11-07T21:15:23.463807+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 1.0
+  },
+  {
+    "label": "baseline-install",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "pnpm",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "started": "2026-11-07T21:15:24.496977+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 2.38
+  },
+  {
+    "label": "baseline-web-install",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "--workdir",
+      "/work/web",
+      "--env",
+      "GIT_TERMINAL_PROMPT=0",
+      "--env",
+      "GIT_SSH_COMMAND=ssh -oBatchMode=yes -oStrictHostKeyChecking=yes",
+      "pcr45-baseline",
+      "timeout",
+      "60",
+      "npm",
+      "ci",
+      "--no-audit",
+      "--no-fund"
+    ],
+    "started": "2026-11-07T21:15:40.193521+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 1.3
+  },
+  {
+    "label": "baseline-build",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "pnpm",
+      "build"
+    ],
+    "started": "2026-11-07T21:15:39.049565+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 5.83
+  },
+  {
+    "label": "baseline-lint",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "pnpm",
+      "lint"
+    ],
+    "started": "2026-11-07T21:15:58.224144+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 2.37
+  },
+  {
+    "label": "baseline-test",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "pnpm",
+      "test"
+    ],
+    "started": "2026-11-07T21:16:00.623577+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 1.87
+  },
+  {
+    "label": "baseline-typecheck",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "pnpm",
+      "typecheck"
+    ],
+    "started": "2026-11-07T21:15:57.057325+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 6.12
+  },
+  {
+    "label": "baseline-runtime-offline",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "node",
+      "scripts/smoke.mjs"
+    ],
+    "started": "2026-11-07T21:17:58.808574+00:00",
+    "exitStatus": 1,
+    "elapsedSeconds": 0.66
+  },
+  {
+    "label": "baseline-runtime-offline-corrected",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "pcr45-baseline",
+      "node",
+      "scripts/smoke.mjs"
+    ],
+    "started": "2026-11-07T21:18:30.633770+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 0.98
+  },
+  {
+    "label": "web-lock-update",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "--workdir",
+      "/work/web",
+      "pcr45-baseline",
+      "npm",
+      "install",
+      "--package-lock-only",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund"
+    ],
+    "started": "2026-11-07T21:18:31.794714+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 0.6
+  },
+  {
+    "label": "offline-empty-store",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "exec",
+      "--workdir",
+      "/offline",
+      "pcr45-baseline",
+      "pnpm",
+      "install",
+      "--offline",
+      "--frozen-lockfile",
+      "--store-dir",
+      "/tmp/pcr-empty-store"
+    ],
+    "started": "2026-11-07T21:21:46.181819+00:00",
+    "exitStatus": 1,
+    "elapsedSeconds": 1.19
+  },
+  {
+    "label": "candidate-linux-build",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "build",
+      "--no-cache",
+      "--progress=plain",
+      "-f",
+      "scripts/linux/Dockerfile",
+      "-t",
+      "pcr45-candidate",
+      "-"
+    ],
+    "started": "2026-11-07T21:22:21.973800+00:00",
+    "exitStatus": 125,
+    "elapsedSeconds": 0.03
+  },
+  {
+    "label": "candidate-linux-build-compatible",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "build",
+      "--no-cache",
+      "-f",
+      "scripts/linux/Dockerfile",
+      "-t",
+      "pcr45-candidate",
+      "-"
+    ],
+    "started": "2026-11-07T21:22:31.857191+00:00",
+    "exitStatus": 1,
+    "elapsedSeconds": 0.02
+  },
+  {
+    "label": "candidate-linux-build-context",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "build",
+      "--no-cache",
+      "-f",
+      "/tmp/pcr-hub45-evidence/candidate-source/scripts/linux/Dockerfile",
+      "-t",
+      "pcr45-candidate",
+      "/tmp/pcr-hub45-evidence/candidate-source"
+    ],
+    "started": "2026-11-07T21:22:50.712132+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 34.35
+  },
+  {
+    "label": "candidate-offline-runtime",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "run",
+      "--rm",
+      "--network",
+      "none",
+      "pcr45-candidate"
+    ],
+    "started": "2026-11-07T21:23:31.676278+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 1.32
+  },
+  {
+    "label": "native-fallback",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "run",
+      "--rm",
+      "--env",
+      "npm_config_build_from_source=true",
+      "pcr45-candidate",
+      "pnpm",
+      "rebuild",
+      "better-sqlite3"
+    ],
+    "started": "2026-11-07T21:24:06.466533+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 0.43
+  },
+  {
+    "label": "native-fallback-recursive",
+    "command": [
+      "docker",
+      "--context",
+      "colima-pcr45",
+      "run",
+      "--rm",
+      "--env",
+      "npm_config_build_from_source=true",
+      "pcr45-candidate",
+      "sh",
+      "-c",
+      "pnpm -r rebuild better-sqlite3 && node scripts/smoke.mjs"
+    ],
+    "started": "2026-11-07T21:24:13.011555+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 36.06
+  },
+  {
+    "label": "committed-release-verification",
+    "command": [
+      "./scripts/verify-linux.sh",
+      "HEAD"
+    ],
+    "started": "2026-11-07T21:31:17.253142+00:00",
+    "exitStatus": 0,
+    "elapsedSeconds": 35.79
+  }
+]

@@ -1,0 +1,21 @@
+$ docker --context colima-pcr45 exec pcr45-baseline node scripts/smoke.mjs
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","init"],"exitStatus":0,"stdoutBytes":100,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","index"],"exitStatus":0,"stdoutBytes":31,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","context","search","goals schedule progress","--json"],"exitStatus":0,"stdoutBytes":1739,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json","--trace"],"exitStatus":0,"stdoutBytes":12858,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","according to my current goals and nearest schedule, compile a research prompt for assessment of my progress","--json"],"exitStatus":0,"stdoutBytes":10323,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","compile","--stdin","--json"],"exitStatus":0,"stdoutBytes":1495,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","feedback","pcr_45794d20-6256-44a9-a31a-b6eec708b244","--rating","like","--comment","Useful structure","--json"],"exitStatus":0,"stdoutBytes":209,"stderr":""}
+{"command":["/usr/local/bin/node","/work/apps/pcr-cli/dist/bin.js","history","--json"],"exitStatus":0,"stdoutBytes":24161,"stderr":""}
+{"check":"CLI init/index/FTS/compile/JSON/trace/determinism/skip/history/feedback","status":"PASS","indexed":"Indexed 6 file(s), 6 chunk(s).","searchResults":3,"traceSteps":["validateInput","resolveCwd","resolveTools","loadClassifierHistory","classifyIntent","selectTool","resolveProfile","resolveTemplate","prepareToolContext","buildContextPack","buildPromptIr","renderPrompt","persistCompilation"]}
+file:///work/scripts/smoke.mjs:72
+    assert.equal(store.db.pragma("integrity_check", { simple: true }), "ok");
+                          ^
+
+TypeError: Cannot read properties of undefined (reading 'pragma')
+    at file:///work/scripts/smoke.mjs:72:27
+
+Node.js v22.23.4
+
+EXIT_STATUS=1

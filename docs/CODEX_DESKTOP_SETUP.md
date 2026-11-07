@@ -9,7 +9,7 @@ Use the deterministic hook if you want PCR to run before every prompt. Keep the 
 From the PCR repo:
 
 ```bash
-cd /Users/idavidovs/Projects/prompt-compiler
+cd /path/to/prompt-compiler
 pnpm install
 pnpm build
 pnpm --silent pcr init
@@ -65,7 +65,7 @@ Add this block:
 ```toml
 [mcp_servers.pcr]
 command = "node"
-args = ["/Users/idavidovs/Projects/prompt-compiler/apps/pcr-mcp/dist/bin.js"]
+args = ["/path/to/prompt-compiler/apps/pcr-mcp/dist/bin.js"]
 ```
 
 ## 3. Verify In Codex Desktop
@@ -155,7 +155,7 @@ If PCR returns `skipped: true`, Codex should ignore PCR output and answer the or
 For normal use, you only need these commands after pulling updates:
 
 ```bash
-cd /Users/idavidovs/Projects/prompt-compiler
+cd /path/to/prompt-compiler
 pnpm install
 pnpm build
 ```
@@ -169,7 +169,7 @@ MCP is enough for the `$pcr` command. The local HTTP daemon is useful for the da
 For Reminders, start the daemon from Terminal.app after granting Terminal Reminders access:
 
 ```bash
-cd /Users/idavidovs/Projects/prompt-compiler
+cd /path/to/prompt-compiler
 pnpm --silent pcr daemon start
 ```
 
@@ -184,7 +184,7 @@ If planner history shows `Local reminders unavailable` or `Reminders access deni
 Then open **System Settings -> Privacy & Security -> Reminders** and allow the app shown there, usually Terminal, Codex, or `remindctl`. After permission is granted, restart the background daemon from the same authorized Terminal session:
 
 ```bash
-cd /Users/idavidovs/Projects/prompt-compiler
+cd /path/to/prompt-compiler
 pnpm --silent pcr daemon stop
 pnpm --silent pcr daemon start
 ```
@@ -221,6 +221,6 @@ Logs are written to:
 If Codex cannot see the tools:
 
 - Confirm `pnpm build` completed.
-- Confirm `/Users/idavidovs/Projects/prompt-compiler/apps/pcr-mcp/dist/bin.js` exists.
+- Confirm `/path/to/prompt-compiler/apps/pcr-mcp/dist/bin.js` exists.
 - Restart Codex Desktop after editing `~/.codex/config.toml`.
 - Run `pnpm --silent pcr compile "test"` from the repo to confirm PCR itself works.

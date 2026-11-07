@@ -1,0 +1,39 @@
+$ docker --context colima-pcr45 exec pcr45-baseline pnpm install --frozen-lockfile
+Scope: all 15 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +292
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   ╭───────────────────────────────────────────────────────────────────╮
+   │                                                                   │
+   │                Update available! 9.15.4 → 12.18.0.                │
+   │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v12.18.0   │
+   │         Run "corepack install -g pnpm@12.18.0" to update.         │
+   │                                                                   │
+   ╰───────────────────────────────────────────────────────────────────╯
+
+Progress: resolved 292, reused 0, downloaded 290, added 290
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: /root/.local/share/pnpm/store/v3
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 292, reused 0, downloaded 292, added 292, done
+.../node_modules/better-sqlite3 install$ prebuild-install || node-gyp rebuild --release
+.../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+.../node_modules/better-sqlite3 install: Done
+
+devDependencies:
++ @eslint/js 9.39.4
++ @types/better-sqlite3 7.6.13
++ @types/cors 2.8.19
++ @types/express 5.0.6
++ @types/node 22.19.19
++ eslint 9.39.4
++ typescript 5.9.3
++ typescript-eslint 8.59.4
++ vitest 2.1.9
+
+Done in 2.2s
+
+EXIT_STATUS=0

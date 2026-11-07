@@ -1,0 +1,38 @@
+{
+  "remoteRefs": [
+    "1650b4c8a2b70185ea0eb63fd2ed47f491f50035\tHEAD",
+    "1650b4c8a2b70185ea0eb63fd2ed47f491f50035\trefs/heads/main"
+  ],
+  "commits": [
+    "a4c7175570829ce90c3964529e3e89e2a71e0e8b",
+    "1650b4c8a2b70185ea0eb63fd2ed47f491f50035",
+    "aeace3e0812723aaff59084f7c192dba966fdee6"
+  ],
+  "reachableBlobs": 236,
+  "secretPatternMatches": [],
+  "sensitiveFilenameMatches": [],
+  "historicalPersonalMaterial": [
+    {
+      "blob": "fae2e6b312eb802f256301a69df8333294f7dbfc",
+      "path": "README.md",
+      "absoluteMacPath": true,
+      "legacyCredentialSetupNarrative": false
+    },
+    {
+      "blob": "5ff806e33aa755ed8ee238bf700fd5c405f118d8",
+      "path": "docs/CODEX_DESKTOP_SETUP.md",
+      "absoluteMacPath": true,
+      "legacyCredentialSetupNarrative": false
+    },
+    {
+      "blob": "8fd3c59b32b316b6db2610534b4e948b7cb504aa",
+      "path": "implementation/progress.md",
+      "absoluteMacPath": false,
+      "legacyCredentialSetupNarrative": true
+    }
+  ],
+  "candidateFiles": 246,
+  "candidateContentBytes": 687801,
+  "candidateSecretPatternMatches": [],
+  "method": "Local pattern scan of every blob reachable from release HEAD and all candidate source files; no matched values printed. Not a universal absence-of-secrets certification."
+}

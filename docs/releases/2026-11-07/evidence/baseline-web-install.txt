@@ -1,0 +1,10 @@
+$ docker --context colima-pcr45 exec --workdir /work/web --env GIT_TERMINAL_PROMPT=0 --env 'GIT_SSH_COMMAND=ssh -oBatchMode=yes -oStrictHostKeyChecking=yes' pcr45-baseline timeout 60 npm ci --no-audit --no-fund
+
+added 10 packages in 1s
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
+
+EXIT_STATUS=0

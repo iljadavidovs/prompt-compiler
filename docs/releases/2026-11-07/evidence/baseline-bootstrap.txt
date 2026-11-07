@@ -1,0 +1,6 @@
+$ docker --context colima-pcr45 exec pcr45-baseline sh -c 'corepack --version && corepack enable && corepack prepare pnpm@9.15.4 --activate && pnpm --version'
+0.36.0
+Preparing pnpm@9.15.4 for immediate activation...
+9.15.4
+
+EXIT_STATUS=0

@@ -1,0 +1,36 @@
+$ docker --context colima-pcr45 exec pcr45-baseline pnpm typecheck
+
+> prompt-compiler@0.0.0 typecheck /work
+> pnpm -r --sort typecheck
+
+Scope: 14 of 15 workspace projects
+packages/dashboard typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-shared typecheck$ tsc -p tsconfig.json --noEmit
+packages/dashboard typecheck: Done
+packages/pcr-shared typecheck: Done
+packages/pcr-intelligence typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-store typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-coding typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-grammar typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-grammar typecheck: Done
+packages/pcr-tool-planner typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-tool-coding typecheck: Done
+packages/pcr-tool-progress-assessment typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-intelligence typecheck: Done
+packages/pcr-store typecheck: Done
+packages/pcr-tool-progress-assessment typecheck: Done
+packages/pcr-tool-planner typecheck: Done
+packages/pcr-retrieval typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-retrieval typecheck: Done
+packages/pcr-context typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-context typecheck: Done
+packages/pcr-core typecheck$ tsc -p tsconfig.json --noEmit
+packages/pcr-core typecheck: Done
+apps/pcr-mcp typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcrd typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcrd typecheck: Done
+apps/pcr-mcp typecheck: Done
+apps/pcr-cli typecheck$ tsc -p tsconfig.json --noEmit
+apps/pcr-cli typecheck: Done
+
+EXIT_STATUS=0

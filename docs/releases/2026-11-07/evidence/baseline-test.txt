@@ -1,0 +1,27 @@
+$ docker --context colima-pcr45 exec pcr45-baseline pnpm test
+
+> prompt-compiler@0.0.0 test /work
+> vitest run
+
+
+ RUN  v2.1.9 /work
+
+ ✓ packages/pcr-intelligence/src/classifier.test.ts (8 tests) 17ms
+ ✓ packages/pcr-retrieval/src/retrieval.test.ts (2 tests) 8ms
+ ✓ apps/pcr-cli/src/codex.test.ts (6 tests) 34ms
+ ✓ packages/pcr-store/src/store.test.ts (3 tests) 5ms
+ ✓ apps/pcr-cli/src/gateway.test.ts (2 tests) 41ms
+ ✓ packages/pcr-core/src/compiler.test.ts (17 tests) 362ms
+ ✓ packages/pcr-context/src/context.test.ts (2 tests) 144ms
+ ✓ apps/pcrd/src/server.test.ts (1 test) 110ms
+ ✓ apps/pcr-cli/src/cli.test.ts (1 test) 190ms
+ ✓ packages/pcr-shared/src/index.test.ts (3 tests) 2ms
+ ✓ apps/pcr-mcp/src/tools.test.ts (1 test) 28ms
+
+ Test Files  11 passed (11)
+      Tests  46 passed (46)
+   Start at  21:16:00
+   Duration  1.48s (transform 497ms, setup 0ms, collect 1.38s, tests 939ms, environment 1ms, prepare 402ms)
+
+
+EXIT_STATUS=0

@@ -6,7 +6,7 @@ Static landing page for Prompt Compiler, built under `web/` with EssenceKit conv
 
 ```sh
 cd web
-npm install
+npm ci
 npm run build
 ```
 
@@ -64,6 +64,13 @@ The current EssenceKit CLI package is not published to npm and the GitHub packag
 Because of that coupling, this site keeps a local copy of EssenceKit `src/Core`. That is the smallest practical workaround without rewriting the framework.
 
 One local Core line was changed: `src/Core/Compiler/Renderer.js` writes output to `web/Pub` instead of `web/src/Pub`, matching the requested project shape.
+
+The dependency is pinned to EssenceKit revision
+`7fff4985cc5070547e97e41782ed50655c7e6a49` through a public HTTPS archive.
+No SSH key or GitHub account is needed. Use Node 22 (see root `.node-version`).
+Generated `Pub` output is rebuilt locally and excluded from source exports.
+The copied Core and generated assets retain the original MIT notice in
+[`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
 
 ## Editing
 

@@ -1,0 +1,87 @@
+{
+  "baseline-environment.txt": {
+    "rawSha256": "b78357cd8a5523bed9edd2ec7c66158eac7837315ceea92c96e53dcda71a2296",
+    "archivedSha256": "b78357cd8a5523bed9edd2ec7c66158eac7837315ceea92c96e53dcda71a2296",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-bootstrap.txt": {
+    "rawSha256": "2e4d0f8335b975e7e4130c35794a49032e2abce8a15b5f1cc8656a9924996af5",
+    "archivedSha256": "2e4d0f8335b975e7e4130c35794a49032e2abce8a15b5f1cc8656a9924996af5",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-install.txt": {
+    "rawSha256": "7d30da26df25b102adaa941ed9bcea3b7cbfc986ec3e053cc85699736b6156a5",
+    "archivedSha256": "7d30da26df25b102adaa941ed9bcea3b7cbfc986ec3e053cc85699736b6156a5",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-build.txt": {
+    "rawSha256": "de284c5d7f747ccc9644a61dfca6fd3a89f73a9d66a5fea55bdc43f357d5af47",
+    "archivedSha256": "de284c5d7f747ccc9644a61dfca6fd3a89f73a9d66a5fea55bdc43f357d5af47",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-typecheck.txt": {
+    "rawSha256": "84ee1eeae9da57457ab446c23927469b45eecce4378f6e0211ce370d0f775540",
+    "archivedSha256": "84ee1eeae9da57457ab446c23927469b45eecce4378f6e0211ce370d0f775540",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-lint.txt": {
+    "rawSha256": "73e05017738ad1bb1be128694103fd4e0002c594ffc5ccda4b7fda0a41f94f9f",
+    "archivedSha256": "73e05017738ad1bb1be128694103fd4e0002c594ffc5ccda4b7fda0a41f94f9f",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-test.txt": {
+    "rawSha256": "3183de3316a38cbc79fa841e02ddf56b8c2c0586f81a1942fbfac211833b58a5",
+    "archivedSha256": "3183de3316a38cbc79fa841e02ddf56b8c2c0586f81a1942fbfac211833b58a5",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-web-install.txt": {
+    "rawSha256": "7fe8959d06bc15057884d1bcf4da0981fd808118fa49924019001a25bb1e0ebf",
+    "archivedSha256": "7fe8959d06bc15057884d1bcf4da0981fd808118fa49924019001a25bb1e0ebf",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-runtime-offline.txt": {
+    "rawSha256": "7db20bf7f843cf20c4fd657317037af38c00d9e6dbd3ab36b76cbb1b410d3bba",
+    "archivedSha256": "7db20bf7f843cf20c4fd657317037af38c00d9e6dbd3ab36b76cbb1b410d3bba",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "baseline-runtime-offline-corrected.txt": {
+    "rawSha256": "12fa0aa0f418c6bea00b57dc36e02b2371ba1a588145c7d72036d5512f800f22",
+    "archivedSha256": "12fa0aa0f418c6bea00b57dc36e02b2371ba1a588145c7d72036d5512f800f22",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "offline-empty-store.txt": {
+    "rawSha256": "56bd92c1943ff8d498b4b75de597bc762cb128c8f3ad16ca67f1e5dfc3016cfc",
+    "archivedSha256": "56bd92c1943ff8d498b4b75de597bc762cb128c8f3ad16ca67f1e5dfc3016cfc",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "candidate-linux-build.txt": {
+    "rawSha256": "dd4e2fa9dd0baaeb8faa6726a37c411182552c6c42606f887692f615a3aae57c",
+    "archivedSha256": "dd4e2fa9dd0baaeb8faa6726a37c411182552c6c42606f887692f615a3aae57c",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "candidate-linux-build-compatible.txt": {
+    "rawSha256": "2f0ee1ac1c44a61a88a9300e74335e99f9d2ce30ca41a7ca5cbe1386168ffbca",
+    "archivedSha256": "2f0ee1ac1c44a61a88a9300e74335e99f9d2ce30ca41a7ca5cbe1386168ffbca",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "candidate-linux-build-context.txt": {
+    "rawSha256": "621494599b36134cf9c77522ed9ad0b586ac5de0af0869061d7427e315ef5fa6",
+    "archivedSha256": "6b812489e6dce092ceb8194cdf904a9147aa62baa907c3a0452d6fee5d034223",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "candidate-offline-runtime.txt": {
+    "rawSha256": "5c57f5712332992c4897dc5c67bb46a99b1672dee03e12bd4a4af7c0ca167596",
+    "archivedSha256": "5c57f5712332992c4897dc5c67bb46a99b1672dee03e12bd4a4af7c0ca167596",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "native-fallback-recursive.txt": {
+    "rawSha256": "a4ef079a107b0b589795e251be3b5b9934071a48b0fcfa8ee3ea019c4dc4363e",
+    "archivedSha256": "9767cdfd7e0fd6fac425ae14c888147f8c25e32ce9f1cb9d296f33b4e605c310",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  },
+  "committed-release-verification.txt": {
+    "rawSha256": "839eb53cea4d935e66fed5dec423b58ea189d277741d0b9d75b31647b3470dab",
+    "archivedSha256": "42bc0573c527a906a69c8bc416d767308070d74861c3835fb3ae1019aab1eeda",
+    "normalization": "ANSI color escapes and trailing line whitespace removed only"
+  }
+}
