@@ -55,10 +55,13 @@ If the config is missing or `tools.enabled` is empty, PCR has no active tools an
 pnpm --silent pcr init
 ```
 
-For now, the default preselected tool is:
+The default preselected tools are:
 
 ```text
 progress-assessment
+grammar
+planner
+coding
 ```
 
 ## Commands

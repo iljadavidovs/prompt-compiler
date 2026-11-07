@@ -135,7 +135,7 @@ importers:
         specifier: ^16.5.0
         version: 16.6.1
       essencekit:
-        specifier: github:essencekit/essencekit
+        specifier: https://codeload.github.com/essencekit/essencekit/tar.gz/7fff4985cc5070547e97e41782ed50655c7e6a49
         version: https://codeload.github.com/essencekit/essencekit/tar.gz/7fff4985cc5070547e97e41782ed50655c7e6a49
       fs-extra:
         specifier: ^11.3.0

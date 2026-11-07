@@ -1,6 +1,6 @@
 {
   "name": "@pcr/pcrd",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,5 +24,6 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "yaml": "^2.7.0"
-  }
+  },
+  "license": "MIT"
 }

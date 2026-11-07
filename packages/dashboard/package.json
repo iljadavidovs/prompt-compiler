@@ -1,6 +1,6 @@
 {
   "name": "@pcr/dashboard",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
@@ -19,11 +19,12 @@
   },
   "dependencies": {
     "dotenv": "^16.5.0",
-    "essencekit": "github:essencekit/essencekit",
+    "essencekit": "https://codeload.github.com/essencekit/essencekit/tar.gz/7fff4985cc5070547e97e41782ed50655c7e6a49",
     "fs-extra": "^11.3.0",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.7"
-  }
+  },
+  "license": "MIT"
 }

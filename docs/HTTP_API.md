@@ -20,6 +20,10 @@ GET  /v1/history/:id
 POST /v1/history/:id/feedback
 GET  /v1/templates
 GET  /v1/profiles
+GET  /v1/settings
+POST /v1/settings
+GET  /v1/tools
+POST /v1/tools/:id
 ```
 
 Compile example:
@@ -30,10 +34,14 @@ curl -s http://127.0.0.1:4317/v1/compile \
   -d '{"rawText":"according to my current goals and nearest schedule, compile a research prompt for assessment of my progress"}'
 ```
 
-Security defaults:
+Current boundaries:
 
 - loopback binding only
 - restrictive localhost CORS
 - no raw context logging
-- obvious secrets redacted before history storage
+- text-column redaction does not cover all structured history
+
+The API has no authentication or Host validation; CORS does not prevent writes.
+Settings can expose configured keys, and dashboard history has an HTML injection
+defect. Read [known limitations](KNOWN_LIMITATIONS.md) before starting it.
 

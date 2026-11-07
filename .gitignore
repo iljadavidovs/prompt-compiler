@@ -8,3 +8,12 @@ coverage/
 *.sqlite-shm
 *.sqlite-wal
 
+
+.DS_Store
+.pnpm-store/
+**/Pub/**
+!**/Pub/**/
+*.tsbuildinfo
+*.db
+*.db-shm
+*.db-wal

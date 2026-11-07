@@ -1,115 +1,133 @@
-# Prompt Compiler V0 (PCR)
+# Prompt Compiler (PCR) 0.1.0
 
-PCR is a local-first prompt/context compiler. It turns rough intent into a structured prompt by resolving local goals, schedule, preferences, profiles, templates, history, and feedback.
+PCR is a local-first prompt/context compiler. It selects an enabled tool, retrieves
+local context with SQLite FTS5, builds a ContextPack and PromptIR, renders a prompt,
+and records compilation history and feedback. If no enabled tool applies, it returns
+a structured skip so the original request can proceed.
 
-PCR V0 is deterministic by default and does not require OpenAI, Anthropic, embeddings, vector databases, OAuth, cloud accounts, or a hosted service.
+The standalone deterministic workflow requires no Codex installation, provider
+account, API key, Apple Reminders, or hosted service.
 
-## Quick Start
+**Early experimental release:** use synthetic or non-sensitive inputs in trusted
+projects. Known defects remain, including dashboard HTML injection, incomplete
+structured-history redaction, executable project configuration, and database-global
+retrieval. Read [Known limitations](docs/KNOWN_LIMITATIONS.md) before using the
+HTTP server, dashboard, personal context, or optional providers.
+
+## Fresh installation
+
+Use **Node.js 22** and **pnpm 9.15.4**. The verification image and `.node-version`
+pin Node **22.23.4**. Linux verification uses Debian 12 with glibc; Alpine/musl and
+Windows are not established by these checks.
 
 ```bash
-pnpm install
+git clone https://github.com/iljadavidovs/prompt-compiler.git
+cd prompt-compiler
+corepack enable
+corepack prepare pnpm@9.15.4 --activate
+pnpm install --frozen-lockfile
 pnpm build
+pnpm typecheck
+pnpm lint
 pnpm test
+```
+
+Fresh installation needs access to the npm registry and GitHub's public download
+endpoints. EssenceKit is pinned to a public HTTPS source archive; no GitHub login
+or SSH key is required. `better-sqlite3` needs a matching native prebuild or Python 3,
+`make`, and a C++ compiler to build locally. Debian's `build-essential` and `python3`
+provide the native fallback prerequisites. Do not copy `node_modules` between
+macOS and Linux or disable dependency install scripts: SQLite and esbuild need them.
+
+## Standalone use
+
+```bash
 pnpm --silent pcr init
-pnpm --silent pcr codex install
-pnpm --silent pcr codex hook on    # optional: run PCR before each Codex prompt
 pnpm --silent pcr context index
-pnpm --silent pcr compile "according to my current goals and nearest schedule, compile a research prompt for assessment of my progress"
+pnpm --silent pcr context search "goals schedule progress" --json
+pnpm --silent pcr compile "according to my current goals and nearest schedule, compile a research prompt for assessment of my progress" --json --trace
+pnpm --silent pcr history --json
+# Use a compileId from the previous output:
+pnpm --silent pcr feedback <compileId> --rating like --comment "Useful structure"
 ```
 
-## Daemon And Dashboard
+Initialization creates default context and configuration under `~/.pcr`; it enables
+four built-in tools and leaves Reminders disabled. Existing default files are
+preserved. Keep separate user directories and databases for unrelated projects
+because retrieval is not project-isolated yet.
 
-Start the local HTTP daemon in the background:
+To verify the built software with disposable defaults and no provider credentials:
 
 ```bash
-pnpm --silent pcr daemon start
+pnpm smoke
 ```
 
-Check or stop it:
+This script creates and removes its own temporary home, project, and SQLite database.
+It exercises CLI compilation, indexing/FTS, history/feedback, all six MCP tools over
+stdio, and HTTP/dashboard asset delivery. It does not need Codex.
+
+## Reproduce Linux verification
+
+With Docker running, verify a committed revision using:
 
 ```bash
-pnpm --silent pcr daemon status
-pnpm --silent pcr daemon stop
+./scripts/verify-linux.sh HEAD
 ```
 
-Foreground debugging is still available:
+The script exports only Git-tracked contents at that commit, checks the source archive
+is below 50 MB, and builds without cached dependency-install layers in a pinned Node
+22/Debian image. It runs the workspace build, typecheck, lint, all existing tests,
+dashboard production build, and the separate website's clean install and builds.
+It then runs the actual CLI/SQLite/MCP/HTTP smoke flow with Docker networking disabled.
+No host home, credentials, `.git`, ignored files, dependencies, or Codex installation
+are mounted into the container. See [verification details](docs/LINUX_VERIFICATION.md).
+
+## HTTP, dashboard, and MCP
+
+Start the foreground local server:
 
 ```bash
 pnpm --silent pcr serve
 ```
 
-The daemon binds to loopback only:
+The server binds to `http://127.0.0.1:4317`; health is at `/health`, and the dashboard
+is at `/dashboard/`. Loopback binding is not an authentication boundary; consult the
+known limitations before running the server or opening stored input in the dashboard.
 
-```text
-http://127.0.0.1:4317
-```
-
-Dashboard:
-
-```text
-http://127.0.0.1:4317/dashboard/
-```
-
-Optional local hostname without typing the port or `/dashboard`:
+For an MCP client, run the stdio server directly after building:
 
 ```bash
-grep -qE '(^|[[:space:]])pcr\.lan([[:space:]]|$)' /etc/hosts || echo '127.0.0.1 pcr.lan' | sudo tee -a /etc/hosts
-sudo env PCR_USER_DIR="$HOME/.pcr" "$(which node)" /Users/idavidovs/Projects/prompt-compiler/apps/pcr-cli/dist/bin.js gateway start
+node /path/to/prompt-compiler/apps/pcr-mcp/dist/bin.js
 ```
 
-Then open:
+Optional background daemon, gateway, and Codex setup are described in the linked
+guides. Apple Reminders requires macOS tooling and authorization; it is optional.
+Optional OpenAI classification and grammar rewriting require explicit configuration
+and a provider key. No external provider is required for the verified workflow.
 
-```text
-http://pcr.lan
-```
+## Workspace and documentation
 
-Gateway status and stop:
+The pnpm workspace contains shared types, SQLite storage, retrieval, context loading,
+the compiler, optional intelligence, four tool packages, the dashboard, CLI, HTTP
+daemon, and MCP server. `web/` is a separate static marketing-site build.
 
-```bash
-sudo env PCR_USER_DIR="$HOME/.pcr" "$(which node)" /Users/idavidovs/Projects/prompt-compiler/apps/pcr-cli/dist/bin.js gateway status
-sudo env PCR_USER_DIR="$HOME/.pcr" "$(which node)" /Users/idavidovs/Projects/prompt-compiler/apps/pcr-cli/dist/bin.js gateway stop
-```
-
-Useful health checks:
-
-```bash
-curl http://127.0.0.1:4317/health
-curl http://127.0.0.1:4317/dashboard/history/
-curl http://pcr.lan/health
-```
-
-On macOS, start the daemon from an authorized Terminal session if planner reminders need Apple Reminders access:
-
-```bash
-remindctl authorize
-cd /Users/idavidovs/Projects/prompt-compiler
-pnpm --silent pcr daemon stop
-pnpm --silent pcr daemon start
-```
-
-## Workspace
-
-```text
-packages/pcr-shared     shared types, schemas, constants, helpers
-packages/pcr-store      SQLite migrations, history, feedback, context chunks
-packages/pcr-retrieval  FTS5 retrieval and history matching
-packages/pcr-context    filesystem context indexing and ContextPack building
-packages/pcr-core       compilePrompt pipeline, PromptIR, templates, profiles
-apps/pcr-cli            pcr command
-apps/pcrd               local HTTP daemon
-apps/pcr-mcp            stdio MCP server
-```
-
-## Documentation
-
-- [PCR v0.1 Summary](docs/SUMMARY_V0_1.md)
 - [CLI](docs/CLI.md)
-- [TypeScript API](docs/TYPESCRIPT_API.md)
 - [HTTP API](docs/HTTP_API.md)
-- [MCP Usage](docs/MCP.md)
-- [Intelligence Layer](docs/INTELLIGENCE.md)
+- [MCP](docs/MCP.md)
+- [TypeScript API](docs/TYPESCRIPT_API.md)
 - [Tools](docs/TOOLS.md)
-- [Codex Desktop Setup](docs/CODEX_DESKTOP_SETUP.md)
-- [Codex PCR Command](docs/CODEX_PCR_COMMAND.md)
-- [Manual Test Cases](docs/MANUAL_TEST_CASES.md)
-- [Future Extensions](docs/FUTURE_EXTENSIONS.md)
+- [Optional intelligence](docs/INTELLIGENCE.md)
+- [Codex Desktop setup](docs/CODEX_DESKTOP_SETUP.md)
+- [Codex PCR command](docs/CODEX_PCR_COMMAND.md)
+- [Historical v0.1 summary](docs/summaries/SUMMARY_V0_1.md)
+- [Known limitations](docs/KNOWN_LIMITATIONS.md)
+
+Historical implementation notes describe development-time observations; the dated
+release verification record states which current checks were actually executed.
+This is a source release, not a published npm package. Build from a clean checkout.
+
+## License
+
+PCR is licensed under [MIT](LICENSE), copyright 2026 Ilja Davidovs. Copied EssenceKit
+code retains its original MIT copyright and permission notice in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

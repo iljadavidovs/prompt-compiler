@@ -1,6 +1,6 @@
 {
   "name": "@pcr/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,5 +25,6 @@
     "@pcr/tool-planner": "workspace:*",
     "@pcr/tool-progress-assessment": "workspace:*",
     "yaml": "^2.7.0"
-  }
+  },
+  "license": "MIT"
 }
