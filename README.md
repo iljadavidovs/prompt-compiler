@@ -9,10 +9,11 @@ The standalone deterministic workflow requires no Codex installation, provider
 account, API key, Apple Reminders, or hosted service.
 
 **Early experimental release:** use synthetic or non-sensitive inputs in trusted
-projects. Known defects remain, including dashboard HTML injection, incomplete
-structured-history redaction, executable project configuration, and database-global
-retrieval. Read [Known limitations](docs/KNOWN_LIMITATIONS.md) before using the
-HTTP server, dashboard, personal context, or optional providers.
+projects. The Playground adds inert rendering, recursive credential-shaped
+redaction, local API access checks and a selected-only compilation boundary.
+Generic project-context compilation, historical data at rest and gateway behavior
+still have the limitations in [Known limitations](docs/KNOWN_LIMITATIONS.md).
+These scoped protections do not establish production or private-data safety.
 
 ## Local Playground (task branch)
 

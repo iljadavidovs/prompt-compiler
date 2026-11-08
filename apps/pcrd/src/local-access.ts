@@ -11,7 +11,9 @@ export function installLocalAccess(app: Express, token: string): void {
       res.status(403).json({ error: "Local authority required." }); return;
     }
     const origin = req.headers.origin;
-    if ((origin && origin !== authority.origin) || ["cross-site", "same-site"].includes(String(req.headers["sec-fetch-site"] ?? ""))) {
+    const dashboardNavigation = req.method === "GET" && (req.path === "/dashboard" || req.path.startsWith("/dashboard/"))
+      && req.headers["sec-fetch-mode"] === "navigate" && req.headers["sec-fetch-dest"] === "document";
+    if (!dashboardNavigation && ((origin && origin !== authority.origin) || ["cross-site", "same-site"].includes(String(req.headers["sec-fetch-site"] ?? "")))) {
       res.status(403).json({ error: "Same-origin access required." }); return;
     }
     res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");

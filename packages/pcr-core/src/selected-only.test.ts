@@ -20,6 +20,15 @@ async function fixture() {
 const options = { contextMode: "selected-only" as const, includeTrace: true };
 
 describe("selected-only compiler policy", () => {
+  it("retains exact raw-request whitespace in matched and skipped history", async () => {
+    const f = await fixture();
+    for (const rawText of ["\n  implement a code review\n\t", " \n hello there \n "]) {
+      const output = await compilePrompt({ source: "browser", cwd: f.b, rawText, options });
+      const store = createPcrStore({ dbPath: process.env.PCR_DB_PATH });
+      try { expect(store.getCompilation(output.metadata.compileId)?.rawText).toBe(rawText); }
+      finally { store.close(); }
+    }
+  });
   it("excludes indexed project A, classifier history, feedback and B config in a shared database", async () => {
     const f = await fixture();
     const initial = await compilePrompt({ source: "cli", cwd: f.a, rawText: "assess progress against goals schedule", options: { deterministic: true } });

@@ -19,6 +19,23 @@ async function fixture() {
 const item = (id: string, content: string): any => ({ id, revision: 1, title: id, content, type: "context", purpose: "Synthetic API regression", inputs: [], outputCriteria: "Preserve exact sources", tags: ["synthetic"], provenance: "Synthetic fixture", sensitivity: "non-sensitive", source: { host: "quaggit-fixture", artifactId: `qg_${id}`, projectId: "synthetic-host-project", revision: id === "one" ? 4 : 9, contentHash: hashContent(content) } });
 
 describe("local playground API", () => {
+  it("allows top-level dashboard navigation while rejecting cross-site API and frame requests", async () => {
+    const f = await fixture();
+    const navigate = (path: string, destination = "document") => new Promise<{ status?: number; body: string }>((resolve, reject) => {
+      const req = request(`${f.server.url}${path}`, { headers: { origin: "https://untrusted.invalid", "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": destination } }, response => {
+        let body = ""; response.setEncoding("utf8"); response.on("data", chunk => { body += chunk; });
+        response.on("end", () => resolve({ status: response.statusCode, body }));
+      });
+      req.on("error", reject); req.end();
+    });
+    try {
+      const page = await navigate("/dashboard/playground/");
+      expect(page.status).toBe(200); expect(page.body).toContain('id="compile"');
+      expect((await navigate("/v1/history")).status).toBe(403);
+      expect((await navigate("/v1/session")).status).toBe(403);
+      expect((await navigate("/dashboard/playground/", "iframe")).status).toBe(403);
+    } finally { await f.server.close(); }
+  });
   it("requires a local session and exact origin/authority; bootstrap and settings never expose configured keys", async () => {
     const f = await fixture();
     try {

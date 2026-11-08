@@ -1,5 +1,7 @@
 # Playground verification — 2026-11-08
 
+This is the retained implementation-session record. The later independent recovery/publication audit, fresh synthetic browser evidence, 69-test result and remaining review findings are recorded in [PLAYGROUND_PUBLIC_REVIEW.md](PLAYGROUND_PUBLIC_REVIEW.md). The no-publication statement below describes the earlier session only.
+
 This record covers issue [#9](https://github.com/iljadavidovs/prompt-compiler/issues/9), implemented from remote-main baseline `cebe6524ac07fa2e9568ab44cff4f7fc14b7e56b` on `codex/issue-9-local-playground`. The owner approved interactive implementation including Section 9. The issue remains open for review. No release, push, merge, publication, dispatcher or live provider was used.
 
 ## Reproduce

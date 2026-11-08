@@ -241,7 +241,7 @@ async function secondary() {
     const history = await api('/history?limit=200');
     if (!history.length) host.append(el('p', 'panel-intro', 'No compilations yet. Compile a draft to start your history.'));
     history.forEach(record => {
-      const row = el('article', 'history-row'); const detail = el('div'); detail.append(el('h2', '', record.rawText.split('\n')[0]), el('p', '', `${record.metadata.skipped ? 'Skipped' : record.metadata.selectedToolId} · ${new Date(record.createdAt).toLocaleString()} · ${record.compileId}`));
+      const row = el('article', 'history-row'); const detail = el('div'); detail.append(el('h2', '', record.rawText.trim().split('\n')[0]), el('p', '', `${record.metadata.skipped ? 'Skipped' : record.metadata.selectedToolId} · ${new Date(record.createdAt).toLocaleString()} · ${record.compileId}`));
       row.append(detail, button('Open', () => { state.result = { prompt: record.prompt, promptIr: record.promptIr, contextPack: record.contextPack, metadata: record.metadata, trace: record.metadata.trace }; state.resultInput = record.rawText; state.error = ''; state.resultSignature = ''; state.panel = 'prompt'; renderResult(); location.hash = 'playground'; focusView('result'); })); host.append(row);
     });
   } else if (page === 'tools') {

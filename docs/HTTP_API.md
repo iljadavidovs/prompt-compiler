@@ -54,7 +54,9 @@ broader generic project/provider and gateway limits remain in
 This task branch requires `x-pcr-token` for `/v1/*` APIs. Browser clients obtain an
 in-memory, per-process token from `/v1/session` using a same-origin fetch with
 `x-pcr-bootstrap: 1`; arbitrary Host/Origin authorities and cross-site requests are
-rejected. Programmatic embedded callers receive `StartedServer.apiToken` directly
+rejected for API access. Top-level GET navigation to the static dashboard is allowed
+from another page; this does not permit framed navigation or cross-origin API reads.
+Programmatic embedded callers receive `StartedServer.apiToken` directly
 from `startServer()`. Do not put this token in URLs, browser storage, library data or
 logs. Unauthenticated API clients must adopt this header on this branch.
 

@@ -71,7 +71,7 @@ export const CompilePromptInputSchema = z.object({
   requestId: z.string().max(100).optional(),
   inputHash: z.string().regex(/^[a-f0-9]{64}$/).optional(),
   provenance: z.object({ schemaVersion: z.literal(1), projectId: z.string().min(1), derivedFrom: z.array(z.object({ source: z.object({ host: z.enum(["local", "quaggit-fixture"]), projectId: z.string(), artifactId: z.string(), revision: z.number().int().positive(), contentHash: z.string().regex(/^[a-f0-9]{64}$/) }), role: z.enum(["background", "requirement", "criteria", "example", "goal", "schedule", "preference"]), order: z.number().int().nonnegative() })) }).optional(),
-  rawText: z.string().trim().min(1),
+  rawText: z.string().refine((value) => value.trim().length > 0, "Write a non-empty request."),
   mode: PromptModeSchema.optional(),
   templateId: z.string().min(1).optional(),
   profileId: z.string().min(1).optional(),
