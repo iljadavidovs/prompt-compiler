@@ -19,7 +19,7 @@ describe("pcrd", () => {
 
       const compile = await fetch(`${server.url}/v1/compile`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-pcr-token": server.apiToken },
         body: JSON.stringify({
           rawText: "compile a research prompt for assessment of my progress",
           contextBlocks: [
@@ -36,13 +36,13 @@ describe("pcrd", () => {
       expect(body.metadata.skipped).not.toBe(true);
       expect(body.prompt).toContain("Finish PCR V0");
 
-      const settings = await fetch(`${server.url}/v1/settings`);
+      const settings = await fetch(`${server.url}/v1/settings`, { headers: { "x-pcr-token": server.apiToken } });
       const settingsBody = await settings.json() as { tools: Array<{ id: string; enabled: boolean }> };
       expect(settingsBody.tools.some((tool) => tool.id === "progress-assessment" && tool.enabled)).toBe(true);
 
       const update = await fetch(`${server.url}/v1/tools/grammar`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-pcr-token": server.apiToken },
         body: JSON.stringify({
           enabled: true,
           config: { keywords: ["grammar fix", "copyedit"] },

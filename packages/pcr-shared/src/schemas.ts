@@ -44,6 +44,9 @@ export const ContextBlockSchema = z.object({
 
 export const CompileOptionsSchema = z.object({
   deterministic: z.boolean().optional(),
+  skip: z.boolean().optional(),
+  contextMode: z.enum(["selected-only", "project"]).optional(),
+  executionPolicy: z.enum(["local-only", "configured"]).optional(),
   includeTrace: z.boolean().optional(),
   maxContextTokens: z.number().int().positive().optional(),
   maxPromptTokens: z.number().int().positive().optional(),
@@ -65,7 +68,10 @@ export const CompileOptionsSchema = z.object({
 
 export const CompilePromptInputSchema = z.object({
   source: CompileSourceSchema,
-  rawText: z.string().min(1),
+  requestId: z.string().max(100).optional(),
+  inputHash: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  provenance: z.object({ schemaVersion: z.literal(1), projectId: z.string().min(1), derivedFrom: z.array(z.object({ source: z.object({ host: z.enum(["local", "quaggit-fixture"]), projectId: z.string(), artifactId: z.string(), revision: z.number().int().positive(), contentHash: z.string().regex(/^[a-f0-9]{64}$/) }), role: z.enum(["background", "requirement", "criteria", "example", "goal", "schedule", "preference"]), order: z.number().int().nonnegative() })) }).optional(),
+  rawText: z.string().trim().min(1),
   mode: PromptModeSchema.optional(),
   templateId: z.string().min(1).optional(),
   profileId: z.string().min(1).optional(),

@@ -14,6 +14,20 @@ structured-history redaction, executable project configuration, and database-glo
 retrieval. Read [Known limitations](docs/KNOWN_LIMITATIONS.md) before using the
 HTTP server, dashboard, personal context, or optional providers.
 
+## Local Playground (task branch)
+
+```sh
+pnpm build
+pnpm playground
+```
+
+Open **http://127.0.0.1:4319/dashboard/playground/** for the local draft editor,
+explicit context selection, real PCR compilation, inspection, history and feedback.
+The dedicated workspace works without Codex or provider credentials and leaves
+`~/.pcr` alone. The populated owner library stays outside this repository; a fresh
+installation starts empty. Follow the [practical test tour](docs/PLAYGROUND_QUICKSTART.md)
+and [verification matrix](docs/PLAYGROUND_VERIFICATION.md).
+
 ## Fresh installation
 
 Use **Node.js 22** and **pnpm 9.15.4**. The verification image and `.node-version`

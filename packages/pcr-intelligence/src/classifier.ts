@@ -64,6 +64,8 @@ function canonicalizeClassification(classification: IntentClassification): Inten
 }
 
 export async function classifyIntent(input: ClassifyIntentInput): Promise<IntentClassification> {
+  const denied = input.options?.enabled === false || input.options?.provider === "none" || input.options?.provider === "deterministic";
+  if (denied) return canonicalizeClassification(deterministicClassifyIntent(input));
   loadLocalEnv();
   const options = resolveIntelligenceOptions(input.options);
   const deterministic = deterministicClassifyIntent(input);

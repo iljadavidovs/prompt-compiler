@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PCR — Playground</title><meta name="description" content="Your local prompt writing and compilation workspace." />
+<link rel="stylesheet" href="@ASSETS@/workspace/workspace.css" />
+<script type="module" src="@ASSETS@/workspace/app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#request">Skip to editor</a>
+<header class="app-header">
+  <a class="brand" href="#playground" aria-label="PCR Playground"><span class="brand-symbol" aria-hidden="true">[·]</span><strong>PCR</strong><span class="brand-divider">/</span><span class="brand-caption">Playground</span></a>
+  <nav class="main-nav" aria-label="Workspace"><a href="#playground" aria-current="page">Workspace</a><a href="#history">History</a><a href="#tools">Tools</a><a href="#settings">Settings</a></nav>
+  <span class="local-status"><span class="status-dot"></span>Local only</span>
+</header>
+<div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+<main id="workspace" class="workspace">
+  <aside class="library" id="library" aria-label="Library and drafts">
+    <div class="rail-heading"><h1>Library</h1><button class="icon-button" id="close-library" aria-label="Close library">×</button><button class="icon-button" id="new-draft" aria-label="New draft" title="New draft">+</button></div>
+    <div class="rail-tabs" role="group" aria-label="Browse collection"><button id="browse-library" class="active">Library</button><button id="browse-drafts">Drafts</button></div>
+    <label class="search"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="Find in your library…" aria-label="Search library and drafts" autocomplete="off" /><kbd>⌘K</kbd></label>
+    <div class="filters" id="filters" role="group" aria-label="Filter library"><button data-type="all" class="active">All</button><button data-type="prompt">Prompts</button><button data-type="context">Context</button><button data-type="criteria">Criteria</button></div>
+    <div class="collection-label"><span id="collection-label">YOUR COLLECTION</span><span id="library-count"></span></div>
+    <div id="library-list" class="library-list" aria-live="polite"><p class="rail-empty">Loading local library…</p></div>
+    <div class="rail-footer"><button id="import-library">Import JSON</button><button id="export-library">Export library</button></div>
+    <input type="file" id="import-file" accept="application/json,.json" hidden />
+  </aside>
+  <section class="desk" aria-label="Prompt authoring">
+    <div class="desk-toolbar"><div class="desk-location"><button id="toggle-library" class="icon-button" aria-label="Toggle library" title="Toggle library">☷</button><span>Drafts</span><span class="slash">/</span><span id="draft-breadcrumb">Untitled</span></div><div class="draft-actions"><span id="save-status" class="save-status">New draft</span><button id="save-draft" title="Save draft (⌘S)">Save</button><button id="draft-menu" aria-label="Draft actions">•••</button></div></div>
+    <div class="view-switch" role="group" aria-label="Focused pane"><button id="show-draft" class="active">Draft</button><button id="show-result">Result</button></div>
+    <div class="writing-grid" id="writing-grid">
+      <section class="input-pane" aria-label="Draft editor">
+        <div class="document-heading"><label class="sr-only" for="draft-title">Draft title</label><input id="draft-title" value="Untitled" maxlength="200" autocomplete="off" /><div class="document-meta"><span class="eyebrow">PROMPT DRAFT</span><span id="draft-origin"></span></div></div>
+        <div class="editor-wrap"><label class="sr-only" for="request">Request</label><textarea id="request" spellcheck="true" placeholder="What would you like to work on?&#10;&#10;Write your request, or open a starting point from the library.&#10;For example: investigate a bug, plan this week, or assess progress."></textarea></div>
+        <div class="editor-footer"><span id="word-count">0 words</span><span>Markdown &amp; plain text</span><span class="undo-hint">Native undo · ⌘Z</span></div>
+        <section class="context-tray" aria-label="Selected context"><div class="context-heading"><h2>Context <span id="context-count">0</span></h2><span class="selected-only">Selected only</span><button id="add-context">+ Add</button></div><div id="bindings" class="bindings"><p class="context-empty">Choose context from the library. Nothing else is retrieved.</p></div></section>
+        <div class="compile-bar"><div><span class="status-dot"></span><span>Providers off</span><span class="compile-shortcut">⌘ ↵</span></div><button id="compile" class="primary" disabled>Compile <span aria-hidden="true">↗</span></button></div>
+      </section>
+      <section class="output-pane" aria-label="Compilation result" aria-busy="false">
+        <div class="output-heading"><div><h2>Compiled prompt</h2><span id="result-state">Ready when you are</span></div><div class="output-tools"><button id="copy-result" aria-label="Copy compiled prompt" disabled>Copy</button><button id="export-result" aria-label="Export compilation" disabled>Export</button></div></div>
+        <div id="result-banner" class="result-banner" hidden></div>
+        <div class="result-tabs" role="group" aria-label="Result views"><button data-panel="prompt" class="active">Prompt</button><button data-panel="compare">Compare</button><button data-panel="sources">Sources</button><button data-panel="inspect">Inspect</button></div>
+        <div id="result-content" class="result-content"><div class="empty-result"><span class="empty-mark" aria-hidden="true">[ → ]</span><h3>A place for the finished prompt.</h3><p>Write, select your context, then compile.<br />The result stays separate from your draft.</p><div class="empty-sequence"><span>Draft</span><span>→</span><span>PCR</span><span>→</span><span>Prompt</span></div></div></div>
+        <div class="result-footer" id="result-footer" hidden><div class="result-reference" id="result-reference"></div><div class="result-secondary"><button id="result-to-draft">New draft from result</button><button id="save-result">Keep in library</button><button id="feedback">Feedback</button></div></div>
+      </section>
+    </div>
+  </section>
+</main>
+<section id="secondary-view" class="secondary-view" hidden></section>
+<dialog id="dialog" aria-labelledby="dialog-title"><form method="dialog" class="dialog-shell"><div class="dialog-heading"><h2 id="dialog-title"></h2><button value="cancel" class="icon-button" aria-label="Close dialog">×</button></div><p id="dialog-error" class="dialog-error" role="alert" hidden></p><div id="dialog-body"></div><div id="dialog-actions" class="dialog-actions"></div></form></dialog>
+<div id="fatal" class="fatal" hidden role="alert"></div>
+</body></html>

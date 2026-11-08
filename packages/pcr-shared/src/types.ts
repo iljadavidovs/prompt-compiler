@@ -31,6 +31,9 @@ export type ContextBlockKind =
 
 export interface CompileOptions {
   deterministic?: boolean;
+  skip?: boolean;
+  contextMode?: "selected-only" | "project";
+  executionPolicy?: "local-only" | "configured";
   includeTrace?: boolean;
   maxContextTokens?: number;
   maxPromptTokens?: number;
@@ -66,6 +69,9 @@ export interface ContextBlock {
 
 export interface CompilePromptInput {
   source: CompileSource;
+  requestId?: string;
+  inputHash?: string;
+  provenance?: CompilationProvenance;
   rawText: string;
   mode?: PromptMode;
   templateId?: string;
@@ -113,6 +119,7 @@ export interface PromptIR {
     templateId: string;
     profileId: string;
     source: CompileSource;
+    contextMode?: "selected-only" | "project";
   };
 }
 
@@ -140,6 +147,12 @@ export interface CompileMetadata {
   contextTokenEstimate: number;
   warnings: string[];
   compilerVersion: string;
+  requestId?: string;
+  inputHash?: string;
+  trace?: CompileTrace;
+  provenance?: CompilationProvenance;
+  effectivePolicy?: { contextMode: string; network: "denied" | "configured"; commands: "denied" | "configured"; classifierHistory: boolean; maxContextTokens?: number };
+  sources?: Array<{ id: string; included: boolean; reason?: string }>;
   skipped?: boolean;
   skipReason?: string;
   selectedToolId?: string;
@@ -262,4 +275,20 @@ export interface ResolvedPcrPaths {
   projectDir: string;
   userDir: string;
   dbPath: string;
+}
+
+export interface SourceReference {
+  host: "local" | "quaggit-fixture";
+  projectId: string;
+  artifactId: string;
+  revision: number;
+  contentHash: string;
+}
+
+export type BindingRole = "background" | "requirement" | "criteria" | "example" | "goal" | "schedule" | "preference";
+
+export interface CompilationProvenance {
+  schemaVersion: 1;
+  projectId: string;
+  derivedFrom: Array<{ source: SourceReference; role: BindingRole; order: number }>;
 }

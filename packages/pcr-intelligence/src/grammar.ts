@@ -31,11 +31,12 @@ function stripKeyword(rawText: string, keywords: string[]): string {
 
 function shouldUseOpenAi(options?: IntelligenceOptions): boolean {
   const provider = options?.provider ?? process.env.PCR_INTELLIGENCE_PROVIDER;
+  if (options?.enabled === false || provider === "none" || provider === "deterministic") return false;
   return options?.enabled === true || (options?.enabled !== false && enabledFromEnv() && provider !== "deterministic" && provider !== "none");
 }
 
 export async function rewriteGrammarPrompt(input: GrammarRewriteInput): Promise<GrammarRewriteOutput> {
-  loadLocalEnv();
+  if (input.options?.enabled !== false && !["none", "deterministic"].includes(input.options?.provider ?? "")) loadLocalEnv();
   const keywords = input.keywords?.length ? input.keywords : ["grammar fix"];
   const sourceText = stripKeyword(input.rawText, keywords);
   if (!sourceText) {
@@ -52,7 +53,7 @@ export async function rewriteGrammarPrompt(input: GrammarRewriteInput): Promise<
       correctedPrompt: sourceText,
       provider: "deterministic",
       usedLlm: false,
-      warnings: ["Grammar rewrite used deterministic fallback because OpenAI intelligence is disabled."],
+      warnings: ["Grammar rewrite used deterministic fallback because OpenAI intelligence is disabled. No grammar correction was performed; only the trigger was removed."],
     };
   }
 

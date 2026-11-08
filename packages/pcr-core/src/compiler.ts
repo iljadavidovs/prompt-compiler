@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { offlineGrammarTemplate } from "@pcr/tool-grammar";
 import { buildContextPack } from "@pcr/context";
 import { classifyIntent, rewriteGrammarPrompt, type ClassifierHistoryTurn } from "@pcr/intelligence";
 import { createPcrStore } from "@pcr/store";
@@ -8,8 +9,10 @@ import {
   estimateTokens,
   isoNow,
   maxPromptTokens,
+  maxContextTokens,
   PCR_COMPILER_VERSION,
   redactSecrets,
+  redactStructured,
   type CompilePromptInput,
   type CompilePromptOutput,
   type CompileTrace,
@@ -21,6 +24,7 @@ import {
 } from "@pcr/shared";
 import { resolveProfile } from "./profile.js";
 import { buildPromptIr } from "./prompt-ir.js";
+import { buildContextPackFromBlocks } from "./context-pack.js";
 import { renderPrompt } from "./render.js";
 import { enabledToolMetadata, listEnabledTools, resolveConfig, selectTool, toolConfig } from "./tools.js";
 
@@ -278,6 +282,7 @@ function persistOutput(
         return;
       }
     }
+    output.metadata.trace = input.options?.includeTrace ? structuredClone(trace) : undefined;
     const historyRecord: CompilationHistoryRecord = {
       compileId: output.metadata.compileId,
       createdAt: output.metadata.createdAt,
@@ -308,6 +313,12 @@ function persistOutput(
 
 export async function compilePrompt(input: CompilePromptInput): Promise<CompilePromptOutput> {
   const parsed = CompilePromptInputSchema.parse(input);
+  parsed.rawText = redactSecrets(parsed.rawText);
+  parsed.contextBlocks = redactStructured(parsed.contextBlocks);
+  parsed.provenance = redactStructured(parsed.provenance);
+  parsed.vars = redactStructured(parsed.vars);
+  const selectedOnly = parsed.options?.contextMode === "selected-only";
+  const localOnly = selectedOnly || parsed.options?.executionPolicy === "local-only";
   const trace: CompileTrace = { steps: [] };
   traceStep(trace, "validateInput", { source: parsed.source });
 
@@ -315,15 +326,18 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
   traceStep(trace, "resolveCwd", { cwd });
 
   const paths = resolvePcrPaths(cwd, process.env.PCR_USER_DIR);
-  const config = await resolveConfig(cwd, paths.userDir);
-  const intelligenceOptions = mergeIntelligenceOptions(config, parsed.options?.intelligence);
+  const config = await resolveConfig(cwd, paths.userDir, selectedOnly ? "user" : "project");
+  const configuredIntelligence = mergeIntelligenceOptions(config, parsed.options?.intelligence);
+  const noNetwork = localOnly || parsed.options?.deterministic === true || configuredIntelligence?.enabled === false || ["none", "deterministic"].includes(configuredIntelligence?.provider ?? "");
+  const intelligenceOptions = noNetwork ? { enabled: false, provider: "none" as const, historyWindow: { enabled: false } } : configuredIntelligence;
+  traceStep(trace, "effectivePolicy", { contextMode: selectedOnly ? "selected-only" : "project", network: noNetwork ? "denied" : "configured", commands: localOnly ? "denied" : "configured" });
   const dbPath = process.env.PCR_DB_PATH ?? paths.dbPath;
   const enabledTools = listEnabledTools(config);
   traceStep(trace, "resolveTools", {
     enabledTools: enabledTools.map((tool) => tool.metadata.id),
   });
 
-  const classifierHistory = loadClassifierHistory(dbPath, intelligenceOptions);
+  const classifierHistory = selectedOnly ? [] : loadClassifierHistory(dbPath, intelligenceOptions);
   traceStep(trace, "loadClassifierHistory", {
     turns: classifierHistory.length,
     providerVisible: classifierHistorySettings(intelligenceOptions).providerVisible,
@@ -350,18 +364,21 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
     adapter: classification.adapter,
   });
 
-  const selectedTool = classification.adapter === "skip" ? null : selectTool(classification, enabledTools, parsed.rawText, config);
-  if (!selectedTool) {
-    const warnings = [
-      ...classification.warnings,
-      enabledTools.length === 0
-        ? "PCR skipped because no tools are enabled."
-        : "PCR skipped because no enabled tool matched the request.",
-    ];
-    const output = skippedOutput(parsed, trace, mode, intent, warnings);
-    traceStep(trace, "skip", { reason: output.metadata.skipReason });
+  const skip = (reason: string, warnings: string[] = []): CompilePromptOutput => {
+    const output = skippedOutput(parsed, trace, mode, intent, [...warnings, reason]);
+    traceStep(trace, "skip", { reason });
+    Object.assign(output.metadata, {
+      requestId: parsed.requestId, inputHash: parsed.inputHash, provenance: parsed.provenance,
+      effectivePolicy: { contextMode: selectedOnly ? "selected-only" : "project", network: noNetwork ? "denied" : "configured", commands: localOnly ? "denied" : "configured", classifierHistory: !selectedOnly && classifierHistory.length > 0, maxContextTokens: maxContextTokens(parsed.options) },
+      sources: explicitBlocks(parsed).map((block) => ({ id: block.id, included: false, reason: "Compilation skipped" })),
+    });
     persistOutput(parsed, output, trace, dbPath);
     return output;
+  };
+  const selectedTool = parsed.options?.skip || classification.adapter === "skip" ? null : selectTool(classification, enabledTools, parsed.rawText, config);
+  if (!selectedTool) {
+    return skip(parsed.options?.skip ? "PCR skipped explicitly by the user." : enabledTools.length === 0
+      ? "PCR skipped because no tools are enabled." : "PCR skipped because no enabled tool matched the request.", classification.warnings);
   }
   traceStep(trace, "selectTool", { toolId: selectedTool.metadata.id });
 
@@ -372,13 +389,10 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
     traceStep(trace, "alignClassificationToTool", { mode, intent, toolId: selectedTool.metadata.id });
   }
 
-  const profile = parsed.profileId
+  const profile = parsed.profileId && !selectedOnly
     ? await resolveProfile({ profileId: parsed.profileId, cwd })
     : selectedTool.profile;
   traceStep(trace, "resolveProfile", { profileId: profile.id });
-
-  const template = selectedTool.template;
-  traceStep(trace, "resolveTemplate", { templateId: template.id });
 
   const selectedToolConfig = toolConfig(config, selectedTool);
   const grammarRewrite = selectedTool.metadata.id === "grammar"
@@ -396,9 +410,16 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
     });
   }
 
+  if (grammarRewrite && !grammarRewrite.correctedPrompt) return skip("PCR skipped because no text remained after the grammar trigger.", grammarRewrite.warnings);
+
+  const template = selectedOnly && grammarRewrite && !grammarRewrite.usedLlm ? offlineGrammarTemplate : selectedTool.template;
+  traceStep(trace, "resolveTemplate", { templateId: template.id });
+
   const includeOriginalRequest = selectedTool.metadata.inputPolicy?.includeOriginalRequest ?? true;
   const task = grammarRewrite?.correctedPrompt
     ? grammarRewrite.correctedPrompt
+    : selectedOnly
+    ? parsed.rawText.replace(/^\s*\$pcr\s+/i, "").trim()
     : includeOriginalRequest
     ? [
         classification.taskRewrite,
@@ -407,7 +428,7 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
       ].join("\n")
     : selectedTool.metadata.inputPolicy?.task ?? classification.taskRewrite;
 
-  const toolContextBlocks = selectedTool.prepareContext
+  const toolContextBlocks = !localOnly && selectedTool.prepareContext
     ? await selectedTool.prepareContext({
         cwd,
         rawText: parsed.rawText,
@@ -420,7 +441,9 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
     : [];
   traceStep(trace, "prepareToolContext", { blocks: toolContextBlocks.length });
 
-  const contextPack = await buildContextPack({
+  const contextPack = selectedOnly
+    ? buildContextPackFromBlocks(explicitBlocks(parsed), parsed.options)
+    : await buildContextPack({
     cwd,
     rawText: [
       ...contextNeedQueryTerms(classification.contextNeeds),
@@ -448,9 +471,16 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
   });
   traceStep(trace, "buildPromptIr", { contextItems: promptIr.contextItems.length });
 
+  if (selectedOnly) {
+    promptIr.metadata.contextMode = "selected-only";
+    const included = new Set(promptIr.contextItems.map((block) => block.id));
+    promptIr.contextItems = explicitBlocks(parsed).filter((block) => included.has(block.id));
+  }
   const prompt = renderPrompt(template, promptIr, contextPack);
   const tokenEstimate = estimateTokens(prompt);
   const warnings: string[] = [...classificationWarnings, ...(grammarRewrite?.warnings ?? [])];
+  const omittedSources = selectedOnly ? explicitBlocks(parsed).filter(block => !promptIr.contextItems.some(item => item.id === block.id)).length : 0;
+  if (omittedSources) warnings.push(`${omittedSources} selected source(s) omitted because they exceed the context budget. Inspect Sources for exact omissions.`);
   if (tokenEstimate > maxPromptTokens(parsed.options)) {
     warnings.push("Compiled prompt exceeds maxPromptTokens.");
   }
@@ -471,6 +501,11 @@ export async function compilePrompt(input: CompilePromptInput): Promise<CompileP
       contextTokenEstimate: contextPack.tokenEstimate,
       warnings,
       compilerVersion: PCR_COMPILER_VERSION,
+      requestId: parsed.requestId,
+      inputHash: parsed.inputHash,
+      provenance: parsed.provenance,
+      effectivePolicy: { contextMode: selectedOnly ? "selected-only" : "project", network: noNetwork ? "denied" : "configured", commands: localOnly ? "denied" : "configured", classifierHistory: !selectedOnly && classifierHistory.length > 0, maxContextTokens: maxContextTokens(parsed.options) },
+      sources: explicitBlocks(parsed).map((block) => ({ id: block.id, included: promptIr.contextItems.some((item) => item.id === block.id), reason: promptIr.contextItems.some((item) => item.id === block.id) ? undefined : "Context budget exceeded" })),
       skipped: false,
       selectedToolId: selectedTool.metadata.id,
     },

@@ -1,4 +1,4 @@
-import type { PcrTool } from "@pcr/shared";
+import type { PcrTool, PcrTemplate } from "@pcr/shared";
 
 export const grammarTemplateMarkdown = `---
 id: writing.grammar-fix
@@ -67,3 +67,22 @@ export const grammarTool: PcrTool = {
 };
 
 export const pcrTool = grammarTool;
+
+/** Provider-free authoring must not label unchanged text as a completed correction. */
+export const offlineGrammarTemplate: PcrTemplate = {
+  ...grammarTool.template,
+  id: "writing.grammar-fix.local",
+  name: "Grammar handoff (local)",
+  body: `# User Prompt (trigger removed)
+
+{{task}}
+
+# Compiler Note
+
+No grammar correction was performed. PCR removed the trigger and preserved the source text.
+
+# Instructions
+
+Treat the user prompt above as the effective request. Answer it directly.
+Do not assume that the compiler corrected grammar or verified the wording.`,
+};
