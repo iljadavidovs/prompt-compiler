@@ -9,6 +9,27 @@ const syntheticItem = (id = "fixture-one", content = "SYNTHETIC_REQUIREMENT"): a
 const envelope = (items: unknown[]) => ({ format: "pcr-library", schemaVersion: 1, projectId: "fixture-project", items });
 
 describe("standalone workspace persistence", () => {
+  it("loads the shipped sample pack once and preserves initialized workspaces byte for byte", async () => {
+    const pack = JSON.parse(await readFile(new URL("../../../examples/playground-sample-pack.json", import.meta.url), "utf8"));
+    const store = new WorkspaceStore(await mkdtemp(join(tmpdir(), "pcr-sample-")));
+    expect(await store.importEnvelope(pack, { onlyIfMissing: true })).toEqual({ imported: 3, unchanged: 0 });
+    const seeded = await store.read();
+    expect(seeded.items.map(item => item.type)).toEqual(["prompt", "context", "criteria"]);
+    expect(seeded.drafts).toEqual([]);
+    const [prompt, context] = seeded.items;
+    await store.saveItem({ ...prompt, title: "My edited sample" }, prompt.revision);
+    await store.saveItem({ ...context, archived: true }, context.revision);
+    const before = await readFile(store.path, "utf8");
+    expect((await store.importEnvelope(pack, { onlyIfMissing: true })).imported).toBe(0);
+    expect(await readFile(store.path, "utf8")).toBe(before);
+
+    const empty = new WorkspaceStore(await mkdtemp(join(tmpdir(), "pcr-empty-library-")));
+    await empty.importEnvelope(envelope([]));
+    const emptyBefore = await readFile(empty.path, "utf8");
+    expect((await empty.importEnvelope(pack, { onlyIfMissing: true })).imported).toBe(0);
+    expect(await readFile(empty.path, "utf8")).toBe(emptyBefore);
+  });
+
   it("atomically saves drafts, rejects concurrent revision conflicts, preserves work after reload", async () => {
     const store = new WorkspaceStore(await mkdtemp(join(tmpdir(), "pcr-library-")));
     const draft = { id: "draft-one", title: "Synthetic", content: "Original", bindings: [] };

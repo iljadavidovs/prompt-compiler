@@ -1,0 +1,46 @@
+{
+  "format": "pcr-library",
+  "schemaVersion": 1,
+  "projectId": "pcr-playground-sample",
+  "items": [
+    {
+      "id": "sample-clear-search",
+      "revision": 1,
+      "type": "prompt",
+      "title": "Debug a search reset",
+      "content": "Debug a search box in a small recipe app. Typing a query filters recipes correctly, but clearing the query leaves the results empty. Use the selected context to propose the smallest code change and a regression test. Call out anything that needs checking in the source.",
+      "purpose": "Start a coding draft and try a local compilation with selected sources.",
+      "inputs": [],
+      "outputCriteria": "A focused investigation, a proposed fix, and a regression test.",
+      "tags": ["sample", "coding"],
+      "sensitivity": "non-sensitive",
+      "provenance": "Fictional scenario from the PCR Playground sample pack."
+    },
+    {
+      "id": "sample-recipe-search-context",
+      "revision": 1,
+      "type": "context",
+      "title": "Recipe search behavior",
+      "content": "The recipe list holds six entries in memory. A blank query should show all six recipes in their original order. A nonblank query matches recipe titles without regard to case. The search box has no server dependency.",
+      "purpose": "Add the expected behavior as a requirement and inspect its source reference.",
+      "inputs": [],
+      "outputCriteria": "The proposed fix restores the full list when the query is cleared.",
+      "tags": ["sample", "search"],
+      "sensitivity": "non-sensitive",
+      "provenance": "Fictional context from the PCR Playground sample pack."
+    },
+    {
+      "id": "sample-search-review-criteria",
+      "revision": 1,
+      "type": "criteria",
+      "title": "Search fix checklist",
+      "content": "Exercise three steps in one regression test: start with a blank query, enter a query that matches one title, then clear it. Check result count and order after clearing. Separate observations from proposed causes.",
+      "purpose": "Add review criteria and toggle their inclusion to compare two compilations.",
+      "inputs": [],
+      "outputCriteria": "The regression covers the blank, filtered, and cleared states.",
+      "tags": ["sample", "verification"],
+      "sensitivity": "non-sensitive",
+      "provenance": "Fictional checklist from the PCR Playground sample pack."
+    }
+  ]
+}

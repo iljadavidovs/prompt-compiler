@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, open, readFile, rename, unlink } from "node:fs/promises";
+import { lstat, mkdir, open, readFile, rename, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { redactStructured, type BindingRole, type SourceReference } from "@pcr/shared";
 
@@ -83,12 +83,20 @@ export class WorkspaceStore {
       return { schemaVersion: 1, projectId: `local-${hashContent(this.dir).slice(0, 16)}`, items: [], drafts: [] };
     }
   }
-  async mutate<T>(change: (data: Workspace) => T): Promise<T> {
+  private async mutate<T>(change: (data: Workspace) => T, ifPresent?: { result: T }): Promise<T> {
     await mkdir(this.dir, { recursive: true, mode: 0o700 });
     const lockPath = `${this.path}.lock`;
     const lock = await open(lockPath, "wx", 0o600).catch(() => { throw new WorkspaceError("Workspace is busy. Retry saving; your draft is still in the editor.", 409); });
     const temp = `${this.path}.${randomUUID()}.tmp`;
     try {
+      if (ifPresent) {
+        try {
+          await lstat(this.path);
+          return ifPresent.result;
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        }
+      }
       const data = await this.read();
       const result = change(data);
       const file = await open(temp, "wx", 0o600);
@@ -127,7 +135,7 @@ export class WorkspaceStore {
       return draft;
     });
   }
-  async importEnvelope(value: unknown): Promise<{ imported: number; unchanged: number }> {
+  async importEnvelope(value: unknown, { onlyIfMissing = false } = {}): Promise<{ imported: number; unchanged: number }> {
     const envelope = value as { schemaVersion: unknown; format: unknown; projectId: unknown; items: unknown[] };
     if (!envelope || envelope.schemaVersion !== 1 || envelope.format !== "pcr-library" || typeof envelope.projectId !== "string" || !Array.isArray(envelope.items) || envelope.items.length > 200) throw new WorkspaceError("Expected pcr-library version 1 JSON (up to 200 resolved items).");
     const items = envelope.items.map(parseItem).map(item => ({ ...item, source: item.source ?? { host: "local" as const, projectId: envelope.projectId as string, artifactId: item.id, revision: item.revision, contentHash: item.contentHash } }));
@@ -141,6 +149,6 @@ export class WorkspaceStore {
         if (!old) { data.items.push(item); imported++; }
       }
       return { imported, unchanged: items.length - imported };
-    });
+    }, onlyIfMissing ? { result: { imported: 0, unchanged: 0 } } : undefined);
   }
 }

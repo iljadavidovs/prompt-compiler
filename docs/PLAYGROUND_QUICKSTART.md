@@ -14,7 +14,7 @@ The maintained UI is also reachable from the existing dashboard's History/Tools/
 
 ## First useful compilation
 
-1. In **Library**, search for an engineering or planning brief and open it. Read its purpose, expected inputs and provenance, then choose **Use as draft**. On a fresh installation, create your own draft with **+**, or import your own supported library JSON. There is deliberately no bundled curated corpus.
+1. In a fresh workspace, open **Debug a search reset** in **Library** and choose **Use as draft**. The [sample pack](../examples/playground-sample-pack.json) includes **Recipe search behavior** and **Search fix checklist** for the context selection step. Use **+** to start with your own request.
 2. Edit the title and request. Replace bracketed placeholders with facts you know; missing facts can remain explicit placeholders. **Save** or **⌘S** writes the draft locally.
 3. Open a context or criteria item and choose **Add to context**. The Context tray shows inclusion, role, exact revision and a short content hash. Choose a role and order the sources with the arrow control. A checked source is included; an unchecked source remains visible but is excluded.
 4. Press **Compile** or **⌘Enter**. PCR classifies the request against enabled built-in tools, constructs ContextPack/PromptIR, renders a prompt and writes a real history record. It does not answer or execute the task.
@@ -59,17 +59,19 @@ On Windows/Linux, Ctrl substitutes for ⌘ in the implemented shortcuts; those p
 
 ## Storage and safe experiments
 
-The dedicated launcher creates only missing setup configuration and never reseeds or overwrites existing library entries. Library/drafts live in `PCR_USER_DIR/library/workspace.json`; compilation history/feedback live in the selected `PCR_DB_PATH` (default `PCR_USER_DIR/pcr.sqlite`). Browser recovery is keyed by workspace identity. Context-budget preference is local to this browser. Settings displays the actual paths.
+The dedicated launcher creates missing setup configuration and loads the sample pack only when `PCR_USER_DIR/library/workspace.json` is missing. Later launches preserve the existing library and drafts, including sample edits and removals. To add the samples to an existing workspace, use **Import JSON** and choose `examples/playground-sample-pack.json`. Import reports a conflict if a sample ID already exists with different content.
+
+Library and drafts live in `PCR_USER_DIR/library/workspace.json`. Compilation history and feedback live in `PCR_DB_PATH`, which defaults to `PCR_USER_DIR/pcr.sqlite`. Browser recovery is keyed by workspace identity. Context-budget preference is local to this browser. Settings displays the actual paths.
 
 The populated owner library, original import envelope, inventory and idempotent local seeding script are provided privately outside Git. They contain original AI-assisted material, not imported personal notes or assessment content. Export only the scope you intend to share. Recognizable credential patterns are rejected/redacted, but this is not a secret vault, general personal-data detector or encrypted store.
 
 For a fresh isolated experiment, stop only the server started for this test and use a **new directory**:
 
 ```sh
-PCR_USER_DIR="$(mktemp -d /tmp/pcr-playground-test.XXXXXX)" PCR_PORT=4320 pnpm playground
+PCR_DB_PATH= PCR_USER_DIR="$(mktemp -d /tmp/pcr-playground-test.XXXXXX)" PCR_PORT=4320 pnpm playground
 ```
 
-Open the printed URL. This creates a separate workspace and database without deleting anything. Keep the directory if it contains work you want. Do not reset by deleting your real library or SQLite database. A stale `workspace.json.lock` after an interrupted write requires checking that no writer is running before moving that lock aside; no automatic lock removal is performed.
+Open the printed URL to try the three samples in a separate workspace and database. Keep the directory if it contains work you want. Do not reset by deleting your real library or SQLite database. A stale `workspace.json.lock` after an interrupted write requires checking that no writer is running before moving that lock aside; no automatic lock removal is performed.
 
 ## Deliberate limitations
 

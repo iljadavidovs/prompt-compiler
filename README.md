@@ -25,8 +25,9 @@ pnpm playground
 Open **http://127.0.0.1:4319/dashboard/playground/** for the local draft editor,
 explicit context selection, real PCR compilation, inspection, history and feedback.
 The dedicated workspace works without Codex or provider credentials and leaves
-`~/.pcr` alone. The populated owner library stays outside this repository; a fresh
-installation starts empty. Follow the [practical test tour](docs/PLAYGROUND_QUICKSTART.md)
+`~/.pcr` alone. The first launch of a new workspace loads the three fictional items
+in the [sample pack](examples/playground-sample-pack.json). Existing libraries keep
+their contents. Follow the [practical test tour](docs/PLAYGROUND_QUICKSTART.md)
 and [verification matrix](docs/PLAYGROUND_VERIFICATION.md).
 
 ## Fresh installation

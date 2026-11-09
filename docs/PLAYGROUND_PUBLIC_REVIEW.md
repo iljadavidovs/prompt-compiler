@@ -6,7 +6,7 @@ Reviewed 2026-11-08 for [PCR #9](https://github.com/iljadavidovs/prompt-compiler
 
 The dedicated `codex/issue-9-local-playground` worktree contained implementation commit `0cdffebd232ec424436c60104f5258049bd6fbad` and verification/icon commit `ce9725ccb5c63a2c57ebbf4d852fffc38c5ec0d1`. Both descend from current remote-main baseline `cebe6524ac07fa2e9568ab44cff4f7fc14b7e56b`. The original main checkout's earlier CLI/Codex, documentation, generated-index and untracked changes were outside this branch and remain untouched. Another release worktree was also left untouched. No stash held additional issue work.
 
-The existing architecture and [two-direction design decision](PLAYGROUND_ARCHITECTURE.md) were retained. Source inspection covered the complete task diff: launcher, local-access middleware, workspace routes/store, shared contracts, canonical compiler, history persistence, provider denial, browser modules, tokens and focused tests. No curated library or content-bearing seeder belongs in this branch.
+The existing architecture and [two-direction design decision](PLAYGROUND_ARCHITECTURE.md) were retained. Source inspection covered the complete task diff: launcher, local-access middleware, workspace routes/store, shared contracts, canonical compiler, history persistence, provider denial, browser modules, tokens and focused tests. The reviewed commits excluded the owner library and its private seed script.
 
 ## Corrections found in this pass
 
@@ -46,6 +46,6 @@ The versioned import/compile/export contract preserves source identity, exact re
 
 ## Owner testing and review
 
-Follow [PLAYGROUND_QUICKSTART.md](PLAYGROUND_QUICKSTART.md) for startup, the complete UI feature tour, safe isolated experiments, storage and shutdown. Public source does not contain the populated owner corpus; a fresh installation starts empty. The private handoff records the preserved local library location and inventory separately.
+Follow [PLAYGROUND_QUICKSTART.md](PLAYGROUND_QUICKSTART.md) for startup, the complete UI feature tour, safe isolated experiments, storage and shutdown. The build reviewed here started with an empty library on first launch. The private handoff records the preserved local library location and inventory separately.
 
 Remaining acceptance decisions: owner judgment of visual proportions/typography and workflow suitability; Safari/Firefox, physical mobile, VoiceOver and OS text scaling remain unverified. Preserve the current owner tab's unsaved work before restarting its older running server to load this reviewed build. No claim of merge, release or owner acceptance follows from publishing a review branch or draft PR.
