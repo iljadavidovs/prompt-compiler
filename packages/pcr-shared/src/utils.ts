@@ -84,3 +84,16 @@ export function toArrayText(items: string[], fallback = "- None found."): string
   return items.map((item) => `- ${item}`).join("\n");
 }
 
+
+/** Redact credential-shaped values at every persistence/response depth. Not a general PII detector. */
+export function redactStructured<T>(value: T): T {
+  if (typeof value === "string") return redactSecrets(value) as T;
+  if (Array.isArray(value)) return value.map(redactStructured) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key,
+      /^(apiKey|api_key|authorization|password|passwd|secret|accessToken|refreshToken)$/i.test(key)
+        ? "[REDACTED_SECRET]" : redactStructured(item),
+    ])) as T;
+  }
+  return value;
+}

@@ -1,7 +1,6 @@
 import type { Server } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 import YAML from "yaml";
 import { compilePrompt, getToolStates, listBuiltinProfiles, listBuiltinTemplates, listAvailableTools, resolveConfig } from "@pcr/core";
@@ -9,9 +8,14 @@ import { indexLocalContext } from "@pcr/context";
 import { dashboardDistPath } from "@pcr/dashboard";
 import { searchContext } from "@pcr/retrieval";
 import { createPcrStore } from "@pcr/store";
-import { PcrConfigSchema, resolvePcrPaths, type CompilePromptInput, type PcrConfig } from "@pcr/shared";
+import { PcrConfigSchema, resolvePcrPaths, FeedbackInputSchema, redactStructured, type CompilePromptInput, type PcrConfig } from "@pcr/shared";
+
+import { createLocalToken, installLocalAccess } from "./local-access.js";
+import { installPlaygroundRoutes } from "./playground-routes.js";
+import { WorkspaceError } from "./workspace-store.js";
 
 export interface StartServerOptions {
+  workspaceDir?: string;
   host?: string;
   port?: number;
 }
@@ -20,6 +24,7 @@ export interface StartedServer {
   app: express.Express;
   server: Server;
   url: string;
+  apiToken: string;
   close: () => Promise<void>;
 }
 
@@ -51,36 +56,26 @@ async function writeUserConfig(cwd: string | undefined, config: PcrConfig): Prom
   return configPath;
 }
 
-function allowOrigin(origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void): void {
-  if (!origin) {
-    callback(null, true);
-    return;
-  }
-  try {
-    const url = new URL(origin);
-    callback(null, ["127.0.0.1", "localhost", "pcr.lan"].includes(url.hostname));
-  } catch {
-    callback(null, false);
-  }
-}
-
 function asyncRoute(handler: (req: Request, res: Response) => Promise<void> | void) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(handler(req, res)).catch(next);
   };
 }
 
-export function createApp(): express.Express {
+export function createApp(options: StartServerOptions = {}, apiToken = createLocalToken()): express.Express {
   const app = express();
   app.disable("x-powered-by");
-  app.use(express.json({ limit: "1mb" }));
-  app.use(cors({
-    origin: allowOrigin,
-    methods: ["GET", "POST"],
-    allowedHeaders: ["content-type"],
-    credentials: false,
-    maxAge: 600,
-  }));
+  installLocalAccess(app, apiToken);
+  app.use(express.json({ limit: "4mb" }));
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/v1/")) {
+      const send = res.json.bind(res);
+      res.json = (body) => send(redactStructured(body));
+    }
+    next();
+  });
+  const workspaceDir = options.workspaceDir ?? resolvePcrPaths(undefined, process.env.PCR_USER_DIR).userDir;
+  installPlaygroundRoutes(app, workspaceDir, dbPathFor(workspaceDir), Boolean(options.workspaceDir));
 
   app.get("/health", (_req, res) => {
     res.json({ ok: true, service: "pcrd", version: "0.1.0" });
@@ -88,12 +83,15 @@ export function createApp(): express.Express {
 
   app.use((req, res, next) => {
     if (req.path === "/dashboard" || req.path === "/dashboard/") {
-      res.redirect("/dashboard/history/");
+      res.redirect("/dashboard/playground/");
       return;
     }
     next();
   });
 
+  for (const page of ["history", "tools", "settings"]) {
+    app.get(`/dashboard/${page}/`, (_req, res) => res.redirect(`/dashboard/playground/#${page}`));
+  }
   app.use("/dashboard", express.static(dashboardDistPath("dev"), { extensions: ["html"] }));
   app.use("/dev", express.static(dashboardDistPath("dev"), { extensions: ["html"] }));
 
@@ -115,14 +113,14 @@ export function createApp(): express.Express {
   }));
 
   app.post("/v1/context/index", asyncRoute(async (req, res) => {
-    const cwd = typeof req.body?.cwd === "string" ? req.body.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.body?.cwd === "string" ? req.body.cwd : undefined);
     const result = await indexLocalContext({ cwd, dbPath: dbPathFor(cwd) });
     res.json(result);
   }));
 
   app.get("/v1/context/search", asyncRoute((req, res) => {
     const query = String(req.query.q ?? "");
-    const cwd = typeof req.query.cwd === "string" ? req.query.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.query.cwd === "string" ? req.query.cwd : undefined);
     const limit = req.query.limit ? Number(req.query.limit) : 10;
     const store = createPcrStore({ dbPath: dbPathFor(cwd) });
     try {
@@ -133,7 +131,7 @@ export function createApp(): express.Express {
   }));
 
   app.get("/v1/history", asyncRoute((req, res) => {
-    const cwd = typeof req.query.cwd === "string" ? req.query.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.query.cwd === "string" ? req.query.cwd : undefined);
     const limit = req.query.limit ? Number(req.query.limit) : 20;
     const store = createPcrStore({ dbPath: dbPathFor(cwd) });
     try {
@@ -144,7 +142,7 @@ export function createApp(): express.Express {
   }));
 
   app.get("/v1/history/:id", asyncRoute((req, res) => {
-    const cwd = typeof req.query.cwd === "string" ? req.query.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.query.cwd === "string" ? req.query.cwd : undefined);
     const store = createPcrStore({ dbPath: dbPathFor(cwd) });
     try {
       const compileId = String(req.params.id);
@@ -160,15 +158,15 @@ export function createApp(): express.Express {
   }));
 
   app.post("/v1/history/:id/feedback", asyncRoute((req, res) => {
-    const cwd = typeof req.body?.cwd === "string" ? req.body.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.body?.cwd === "string" ? req.body.cwd : undefined);
     const store = createPcrStore({ dbPath: dbPathFor(cwd) });
     try {
-      const feedback = store.addFeedback({
+      const feedback = store.addFeedback(FeedbackInputSchema.parse({
         compileId: String(req.params.id),
         rating: req.body.rating,
         outcome: req.body.outcome,
         comment: req.body.comment,
-      });
+      }));
       res.json(feedback);
     } finally {
       store.close();
@@ -184,7 +182,7 @@ export function createApp(): express.Express {
   });
 
   app.get("/v1/settings", asyncRoute(async (req, res) => {
-    const cwd = typeof req.query.cwd === "string" ? req.query.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.query.cwd === "string" ? req.query.cwd : undefined);
     const paths = resolvePcrPaths(cwd, process.env.PCR_USER_DIR);
     const config = await resolveConfig(paths.cwd, paths.userDir);
     const tools = await getToolStates(paths.cwd, paths.userDir);
@@ -202,20 +200,22 @@ export function createApp(): express.Express {
   }));
 
   app.post("/v1/settings", asyncRoute(async (req, res) => {
-    const cwd = typeof req.body?.cwd === "string" ? req.body.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.body?.cwd === "string" ? req.body.cwd : undefined);
+    if (options.workspaceDir) { res.status(403).json({ error: "Use tool enable switches. Provider/command configuration is unavailable in this workspace." }); return; }
     const config = PcrConfigSchema.parse(req.body.config ?? {});
     const configPath = await writeUserConfig(cwd, config);
     res.json({ ok: true, configPath, config });
   }));
 
   app.get("/v1/tools", asyncRoute(async (req, res) => {
-    const cwd = typeof req.query.cwd === "string" ? req.query.cwd : undefined;
+    const cwd = options.workspaceDir ?? (typeof req.query.cwd === "string" ? req.query.cwd : undefined);
     const paths = resolvePcrPaths(cwd, process.env.PCR_USER_DIR);
     res.json(await getToolStates(paths.cwd, paths.userDir));
   }));
 
   app.post("/v1/tools/:id", asyncRoute(async (req, res) => {
-    const cwd = typeof req.body?.cwd === "string" ? req.body.cwd : undefined;
+    if (options.workspaceDir && req.body.config !== undefined) { res.status(403).json({ error: "Only tool enable switches are available in this workspace." }); return; }
+    const cwd = options.workspaceDir ?? (typeof req.body?.cwd === "string" ? req.body.cwd : undefined);
     const { config } = await readUserConfig(cwd);
     const toolId = String(req.params.id);
     const tool = listAvailableTools().find((candidate) => candidate.metadata.id === toolId || candidate.metadata.packageName === toolId);
@@ -251,7 +251,7 @@ export function createApp(): express.Express {
   }));
 
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
-    res.status(400).json({ error: error.message });
+    res.status(error instanceof WorkspaceError ? error.status : 400).json({ error: error.message });
   });
 
   return app;
@@ -263,7 +263,8 @@ export async function startServer(options: StartServerOptions = {}): Promise<Sta
     throw new Error("pcrd only binds to 127.0.0.1 by default.");
   }
   const port = options.port ?? 4317;
-  const app = createApp();
+  const apiToken = createLocalToken();
+  const app = createApp(options, apiToken);
   const server = await new Promise<Server>((resolve, reject) => {
     const listener = app.listen(port, host, () => resolve(listener));
     listener.once("error", reject);
@@ -272,6 +273,7 @@ export async function startServer(options: StartServerOptions = {}): Promise<Sta
   const resolvedPort = typeof address === "object" && address ? address.port : port;
   return {
     app,
+    apiToken,
     server,
     url: `http://${host}:${resolvedPort}`,
     close: () => new Promise<void>((resolve, reject) => {

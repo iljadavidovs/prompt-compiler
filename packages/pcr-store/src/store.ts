@@ -5,6 +5,7 @@ import {
   createCompileId,
   isoNow,
   redactSecrets,
+  redactStructured,
   resolvePcrPaths,
   type CompilationHistoryRecord,
   type ContextPack,
@@ -146,12 +147,18 @@ export class PcrStore {
         record.profileId,
         redactSecrets(record.rawText),
         redactSecrets(record.prompt),
-        json(record.promptIr),
-        json(record.contextPack),
-        json(record.metadata),
+        json(redactStructured(record.promptIr)),
+        json(redactStructured(record.contextPack)),
+        json(redactStructured(record.metadata)),
         record.metadata.tokenEstimate,
         record.metadata.contextTokenEstimate,
       );
+  }
+
+  getCompilationByRequestId(requestId: string): CompilationHistoryRecord | null {
+    this.migrate();
+    const row = this.database.prepare("SELECT * FROM compilations WHERE json_extract(metadata_json, '$.requestId') = ? LIMIT 1").get(requestId) as CompilationRow | undefined;
+    return row ? rowToCompilation(row) : null;
   }
 
   getCompilation(compileId: string): CompilationHistoryRecord | null {
@@ -182,7 +189,7 @@ export class PcrStore {
       compileId: input.compileId,
       createdAt: isoNow(),
       rating: input.rating,
-      outcome: input.outcome,
+      outcome: input.outcome ? redactSecrets(input.outcome) : undefined,
       comment: input.comment ? redactSecrets(input.comment) : undefined,
     };
 

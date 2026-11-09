@@ -33,9 +33,9 @@ async function readConfig(path: string): Promise<PcrConfig> {
   return PcrConfigSchema.parse(YAML.parse(await readFile(path, "utf8")) ?? {});
 }
 
-export async function resolveConfig(cwd: string, userDir = join(homedir(), PCR_USER_DIR_NAME)): Promise<PcrConfig> {
+export async function resolveConfig(cwd: string, userDir = join(homedir(), PCR_USER_DIR_NAME), scope: "project" | "user" = "project"): Promise<PcrConfig> {
   const userConfig = await readConfig(join(userDir, "config.yaml"));
-  const projectConfig = await readConfig(join(cwd, PCR_PROJECT_DIR_NAME, "config.yaml"));
+  const projectConfig = scope === "user" ? {} : await readConfig(join(cwd, PCR_PROJECT_DIR_NAME, "config.yaml"));
   return {
     ...userConfig,
     ...projectConfig,

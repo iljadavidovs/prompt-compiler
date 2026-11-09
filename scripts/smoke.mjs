@@ -86,7 +86,8 @@ try {
   const responses = [];
   async function http(route, body) {
     const response = await fetch(httpServer.url + route, {
-      ...(body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }),
+      headers: { "x-pcr-token": httpServer.apiToken },
+      ...(body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json", "x-pcr-token": httpServer.apiToken }, body: JSON.stringify(body) }),
       signal: AbortSignal.timeout(10000),
     });
     responses.push({ route, status: response.status, type: response.headers.get("content-type") });
@@ -105,7 +106,9 @@ try {
   for (const route of ["/dashboard/", "/dashboard/history/", "/dashboard/tools/", "/dashboard/settings/"]) {
     assert.match(await (await http(route)).text(), /<html/i);
   }
-  assert.match(await (await http("/dashboard/assets/dashboard.js")).text(), /renderHistory/);
+  assert.match(await (await http("/dashboard/assets/dashboard.js")).text(), /location\.replace/);
+  assert.match(await (await http("/dashboard/assets/workspace/app.js")).text(), /playground\/compile/);
+  assert.match(await (await http("/dashboard/playground/")).text(), /id="compile"/);
   assert.ok((await (await http("/dashboard/assets/dashboard.css")).text()).length > 100);
   console.log(JSON.stringify({ check: "HTTP health/API flow/dashboard pages and assets", status: "PASS", responses }));
   await httpServer.close();

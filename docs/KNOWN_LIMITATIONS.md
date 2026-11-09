@@ -1,5 +1,8 @@
 # Known limitations in PCR 0.1.0
 
+The findings below describe the published 0.1.0 source release.
+For task-branch changes, see the scoped Playground note at the end.
+
 This is an experimental source release for trusted local use with non-sensitive
 data. Linux reproducibility establishes that the software runs; it does not establish
 production safety. Release work did not implement the earlier audit's broader fixes.
@@ -59,3 +62,35 @@ is checked; that is not a browser security test.
 Fresh installation requires network access or a supplied compatible cache.
 An empty-cache offline install is expected to fail. The installed deterministic
 runtime is tested without networking.
+
+## Playground task branch: scoped changes
+
+The local Playground adds a selected-only compiler path that excludes project YAML,
+implicit retrieval/indexing, classifier history, feedback examples and tool context
+loaders, with provider/network and command denial. Its dedicated launcher uses a
+separate owner-local workspace/database and blocks cwd overrides, indexing and
+provider/command configuration. This is the verified mode for this increment.
+
+The maintained dashboard renders authored/history/error content as inert text.
+HTTP APIs now require an ephemeral local session and validate authority/origin;
+ordinary JSON responses and newly stored structured compilation/feedback fields
+apply recursive credential-shaped redaction. Existing databases are not deleted or
+rewritten; old secrets can remain at rest. Redaction is heuristic, not PII detection
+or encryption. Browser recovery is namespaced and avoids recognizable credentials.
+
+Library/draft writes have revision conflict checks and atomic persistence. Library
+sources do not enter a search index; missing/archived/stale selected sources fail
+visibly. Source inclusion, omission, exact revisions and effective policy are
+inspectable. The local grammar template explicitly states that no correction was
+performed. Offline grammar remains limited to removing the trigger.
+
+These changes do not establish all acceptance requirements of issues #2–#8. Generic
+project-context compilation, database-global retrieval outside selected-only,
+project-provided executable configuration outside local-only policy, legacy data at
+rest, settings-write concurrency and the gateway still need their separate fixes
+and verification. The gateway is not used or changed by Playground.
+
+See [the practical test tour](PLAYGROUND_QUICKSTART.md), [architecture and design
+choices](PLAYGROUND_ARCHITECTURE.md), and [performed verification](PLAYGROUND_VERIFICATION.md).
+Live providers, Codex host execution, Apple Reminders, live Quaggit adapters, light
+appearance, other operating systems and production security are not certified.

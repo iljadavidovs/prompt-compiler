@@ -7,13 +7,14 @@
   "scripts": {
     "build": "pnpm -r --sort build",
     "check": "pnpm lint && pnpm test",
-    "lint": "eslint \"packages/**/*.ts\" \"apps/**/*.ts\" \"*.config.*\"",
+    "lint": "eslint \"packages/**/*.ts\" \"apps/**/*.ts\" \"*.config.*\" \"packages/dashboard/src/App/assets/workspace/*.js\"",
     "pcr": "node apps/pcr-cli/dist/bin.js",
     "pcr-mcp": "node apps/pcr-mcp/dist/bin.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "pnpm -r --sort typecheck",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "playground": "node scripts/playground.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

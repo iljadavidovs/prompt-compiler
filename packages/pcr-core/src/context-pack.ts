@@ -10,49 +10,23 @@ function blockTokenEstimate(block: ContextBlock): number {
   return estimateTokens(`${block.label}\n${block.content}`);
 }
 
-function classifyExplicitBlocks(blocks: ContextBlock[]) {
-  return {
-    goals: blocks.filter((block) => block.kind === "goal"),
-    schedule: blocks.filter((block) => block.kind === "schedule"),
-    preferences: blocks.filter((block) => block.kind === "preference"),
-    recurringComments: blocks.filter((block) => block.kind === "history" && block.label.toLowerCase().includes("recurring")),
-    positiveExamples: blocks.filter((block) => block.kind === "history" && /positive|like|success/i.test(block.label)),
-    negativeExamples: blocks.filter((block) => block.kind === "history" && /negative|dislike|fail|avoid/i.test(block.label)),
-    projectContext: blocks.filter((block) => ["file", "repo", "memory"].includes(block.kind)),
-    manualContext: blocks.filter((block) => ["manual", "selection", "clipboard", "diff", "error"].includes(block.kind)),
-  };
-}
-
 export function buildContextPackFromBlocks(blocks: ContextBlock[], options?: CompileOptions): ContextPack {
-  const budget = maxContextTokens(options);
-  const accepted: ContextBlock[] = [];
-  let runningTokens = 0;
-
+  const pack: ContextPack = { goals: [], schedule: [], preferences: [], recurringComments: [], positiveExamples: [], negativeExamples: [], projectContext: [], manualContext: [], summary: "", tokenEstimate: 0 };
+  let accepted = 0;
   for (const block of blocks) {
-    const nextTokens = blockTokenEstimate(block);
-    if (runningTokens + nextTokens > budget) {
-      continue;
-    }
-    accepted.push(block);
-    runningTokens += nextTokens;
+    const tokens = blockTokenEstimate(block);
+    if (pack.tokenEstimate + tokens > maxContextTokens(options)) continue;
+    const group = block.kind === "goal" ? pack.goals
+      : block.kind === "schedule" ? pack.schedule
+      : block.kind === "preference" ? pack.preferences
+      : ["file", "repo", "memory"].includes(block.kind) ? pack.projectContext
+      : pack.manualContext;
+    group.push(block);
+    pack.tokenEstimate += tokens;
+    accepted++;
   }
-
-  const grouped = classifyExplicitBlocks(accepted);
-  const summaryParts = [
-    grouped.goals.length ? `${grouped.goals.length} goal block(s)` : "",
-    grouped.schedule.length ? `${grouped.schedule.length} schedule block(s)` : "",
-    grouped.preferences.length ? `${grouped.preferences.length} preference block(s)` : "",
-    grouped.positiveExamples.length ? `${grouped.positiveExamples.length} positive history example(s)` : "",
-    grouped.negativeExamples.length ? `${grouped.negativeExamples.length} negative history example(s)` : "",
-  ].filter(Boolean);
-
-  return {
-    ...grouped,
-    summary: summaryParts.length
-      ? `Context pack includes ${summaryParts.join(", ")}.`
-      : "No local context was available; rely only on the user request and explicit constraints.",
-    tokenEstimate: runningTokens,
-  };
+  pack.summary = `Selected ${accepted} explicit source(s); ${pack.tokenEstimate} estimated tokens. No implicit sources, history or feedback were retrieved.`;
+  return pack;
 }
 
 export function flattenContextPack(pack: ContextPack): ContextBlock[] {

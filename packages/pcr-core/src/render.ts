@@ -21,15 +21,24 @@ function formatBlocks(blocks: ContextBlock[], fallback = "- None found."): strin
 }
 
 export function renderPrompt(template: PcrTemplate, promptIr: PromptIR, contextPack: ContextPack): string {
-  return renderTemplate(template, {
+  const selectedOnly = promptIr.metadata.contextMode === "selected-only";
+  const selectedPlaceholder = "See selected context below.";
+  const rendered = renderTemplate(template, {
     task: promptIr.task,
     contextSummary: promptIr.contextSummary,
-    goals: formatBlocks(contextPack.goals),
-    schedule: formatBlocks(contextPack.schedule),
-    preferences: formatBlocks([...contextPack.preferences, ...contextPack.recurringComments]),
-    projectContext: formatBlocks(contextPack.projectContext),
-    manualContext: formatBlocks(contextPack.manualContext),
+    goals: selectedOnly ? selectedPlaceholder : formatBlocks(contextPack.goals),
+    schedule: selectedOnly ? selectedPlaceholder : formatBlocks(contextPack.schedule),
+    preferences: selectedOnly ? selectedPlaceholder : formatBlocks([...contextPack.preferences, ...contextPack.recurringComments]),
+    projectContext: selectedOnly ? selectedPlaceholder : formatBlocks(contextPack.projectContext),
+    manualContext: selectedOnly ? selectedPlaceholder : formatBlocks(contextPack.manualContext),
     positivePatterns: toArrayText(promptIr.positivePatterns),
     negativePatterns: toArrayText(promptIr.negativePatterns),
   });
+  if (!selectedOnly) return rendered;
+  // One ordered representation preserves exact source content across all built-in templates.
+  const sources = promptIr.contextItems.map((block, index) => {
+    const source = block.metadata?.source as { artifactId?: string; revision?: number; contentHash?: string } | undefined;
+    return `## ${index + 1}. ${block.label} [${String(block.metadata?.bindingRole ?? "background")}]\nSource: ${source?.artifactId ?? block.id} @ ${source?.revision ?? "explicit"} | SHA-256: ${source?.contentHash ?? "not supplied"}\n\n${block.content}`;
+  });
+  return `${rendered}\n\n# Selected context (in binding order)\n\n${sources.join("\n\n") || "No context sources contributed to this compilation."}`;
 }
